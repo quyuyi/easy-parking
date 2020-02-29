@@ -45,7 +45,7 @@ class App extends Component {
     }
 
     render() {
-        return (
+        return (       
             <Fragment>
                 <div id='preface'>
                     <div className='grey-bkg'>
@@ -67,6 +67,7 @@ class App extends Component {
                     </div>
                     { this.state.renderPrefaceMap && <Map /> }
                 </div>
+
                 <main id='app'>
                     <Container className='hidden'>
                         <div className='row input-fields'>
