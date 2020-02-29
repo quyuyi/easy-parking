@@ -1,0 +1,43 @@
+{
+  "name": "easy_parking",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "webpack --config webpack.config.js",
+    "start": "python3 -m http.server 3000"
+  },
+  "author": "Junyi Cheng <rexcheng@umich.edu>",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.8.6",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/preset-env": "^7.8.6",
+    "@babel/preset-react": "^7.8.3",
+    "@here/harp-webpack-utils": "^0.13.0",
+    "babel-loader": "^8.0.6",
+    "css-loader": "^3.4.2",
+    "fibers": "^4.0.2",
+    "file-loader": "^5.1.0",
+    "node-sass": "^4.13.1",
+    "resolve-url-loader": "^3.1.1",
+    "sass": "^1.26.1",
+    "sass-loader": "^8.0.2",
+    "style-loader": "^1.1.3",
+    "url-loader": "^3.0.0",
+    "webpack": "^4.41.6",
+    "webpack-cli": "^3.3.11"
+  },
+  "dependencies": {
+    "@here/harp-map-controls": "^0.13.0",
+    "@here/harp-map-theme": "^0.13.0",
+    "@here/harp-mapview": "^0.13.0",
+    "@here/harp-omv-datasource": "^0.13.0",
+    "animejs": "^3.1.0",
+    "bootstrap": "^4.4.1",
+    "jquery": "^3.4.1",
+    "react": "^16.13.0",
+    "react-bootstrap": "^1.0.0-beta.17",
+    "react-dom": "^16.13.0",
+    "three": "^0.112.1"
+  }
+}
