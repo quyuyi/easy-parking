@@ -1,5 +1,3 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
-
 import React, { Component, Fragment } from 'react';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
@@ -16,7 +14,9 @@ class App extends Component {
         this.state = {
             renderPrefaceMap: true,
             playAnimation: false,
-            requestSubmitted: false
+            requestSubmitted: false,
+            validated: false,
+            currentLocation: {}
         };
     }
 
@@ -33,6 +33,21 @@ class App extends Component {
             targets: '#preface-dialog',
             opacity: [0, 1]
         });
+        const geoLocationOptions = {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0
+        };
+        navigator.geolocation.getCurrentPosition(pos => {
+            this.setState({
+                currentLocation: {
+                    lat: pos.coords.latitude,
+                    long: pos.coords.longitude
+                }
+            });
+        }, err => {
+            alert(err.message);
+        }, geoLocationOptions);
     }
 
     componentDidUpdate() {
@@ -70,35 +85,44 @@ class App extends Component {
 
                 <main id='app'>
                     <Container className='hidden'>
-                        <div className='row input-fields'>
+                        <Form noValidate validated={this.state.validated}
+                            className='row input-fields'
+                            onSubmit={e => this.submitSearchRequest(e)}
+                        >
                             <div className='col-6 col-sm-7'>
                                 <Form.Group controlId='input-destination'>
-                                    <Form.Control type='text' placeholder='Your destination' />
+                                    <Form.Control type='text' placeholder='Your destination' required/>
+                                    <Form.Control.Feedback type='invalid'>
+                                        Please choose a destination.
+                                    </Form.Control.Feedback>
                                 </Form.Group>
                             </div>
                             <div className='col-2'>
                                 <Form.Group controlId='input-distance'>
-                                    <Form.Control as='select'>
+                                    <Form.Control as='select' required>
+                                        <option>Within</option>
                                         <option>100 m</option>
                                         <option>200 m</option>
                                         <option>500 m</option>
                                         <option>1 km</option>
                                     </Form.Control>
+                                    <Form.Control.Feedback type='invalid'>
+                                        Please choose a distance range.
+                                    </Form.Control.Feedback>
                                 </Form.Group>
                             </div>
                             <div className='col-3'>
-                                <Button variant='success'
+                                <Button variant='success' type='submit'
                                     disabled={this.state.requestSubmitted}
-                                    onClick={this.submitSearchRequest}
                                 >
                                     Search
                                 </Button>
                             </div>
-                        </div>
+                        </Form>
                     </Container>
                     { !this.state.renderPrefaceMap &&
                         <Map enableControls='true'
-                            currentLocation={this.currentLocation}
+                            currentLocation={this.state.currentLocation}
                         /> }
                 </main>
             </Fragment>
@@ -106,11 +130,6 @@ class App extends Component {
     }
 
     handleGetStartedBtn = () => {
-        const geoLocationOptions = {
-            enableHighAccuracy: true,
-            timeout: 5000,
-            maximumAge: 0
-        };
         anime({
             targets: '.grey-bkg',
             opacity: [1, 0],
@@ -119,20 +138,19 @@ class App extends Component {
             duration: 4000
         }).finished.then(() => {
             $('#app .container').removeClass('hidden');
-            navigator.geolocation.getCurrentPosition(pos => {
-                this.currentLocation = {
-                    lat: pos.coords.latitude,
-                    long: pos.coords.longitude
-                };
-                this.setState({ renderPrefaceMap: false, playAnimation: true });
-            }, err => {
-                alert(err.message);
-            }, geoLocationOptions);
+            this.setState({ renderPrefaceMap: false, playAnimation: true });
         });
     };
 
-    submitSearchRequest = () => {
-        this.setState({ requestSubmitted: true, playAnimation: false });
+    submitSearchRequest = e => {
+        e.preventDefault();
+        const form = e.currentTarget;
+        if (!form.checkValidity()) {
+            e.stopPropagation();
+            this.setState({ playAnimation: false, validated: true });
+            return;
+        }
+        this.setState({ requestSubmitted: true, playAnimation: false, validated: true });
     };
 }
 
