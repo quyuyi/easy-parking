@@ -6,6 +6,7 @@ const $ = require('jquery');
 import React from 'react';
 import ReactDom from 'react-dom';
 import App from './components/app';
+import 'regenerator-runtime/runtime';
 
 $(() => {
     ReactDom.render(<App />, document.getElementById('root'));

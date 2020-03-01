@@ -63,7 +63,11 @@ html, body {
     top: 50px;
     opacity: 0;
 }
-.invalid-feedback {
-    font-size: 90%;
-    font-weight: bold;
+form {
+    .invalid-feedback {
+        font-size: 90%;
+    }
+    .alert {
+        padding: 0.75rem 0.75rem;
+    }
 }
