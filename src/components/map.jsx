@@ -21,12 +21,13 @@ class Map extends Component {
         if (!this.props.currentLocation) {
             this.currentLocation = {
                 lat: 42.279594,
-                long: -83.732124
+                long: -83.732124,
+                altitude: 4000
             }; // Ann Arbor by default
         }
         else
             this.currentLocation = this.props.currentLocation;
-        this.mapView.geoCenter = new GeoCoordinates(this.currentLocation.lat, this.currentLocation.long, 4000);
+        this.mapView.geoCenter = new GeoCoordinates(this.currentLocation.lat, this.currentLocation.long, this.currentLocation.altitude);
         this.resizeMapView();
         const dataSource = new OmvDataSource({
             baseUrl: 'https://xyz.api.here.com/tiles/herebase.02',

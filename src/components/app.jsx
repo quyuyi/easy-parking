@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import Alert from 'react-bootstrap/Alert';
 import TitleSVG from './title-svg';
 import Map from './map';
 
@@ -13,11 +14,12 @@ class App extends Component {
         super(props);
         this.state = {
             renderPrefaceMap: true,
-            playAnimation: false,
             requestSubmitted: false,
             validated: false,
-            currentLocation: {}
+            currentLocation: {},
+            autoComplete: []
         };
+        this.geocoderToken = 'eyJhbGciOiJSUzUxMiIsImN0eSI6IkpXVCIsImlzcyI6IkhFUkUiLCJhaWQiOiI4VjFyQ1VIYTQxMk1zZHlqRGpyTyIsImlhdCI6MTU4MzAzOTQ3MSwiZXhwIjoxNTgzMTI1ODcxLCJraWQiOiJqMSJ9.ZXlKaGJHY2lPaUprYVhJaUxDSmxibU1pT2lKQk1qVTJRMEpETFVoVE5URXlJbjAuLjBPby1GaWUzemIzY3NGTG1zVVdyZlEuZXZKTUpnTHhCaHZUZkF4d3pTNFZRaVNnRmIxczBOUHJGc0JvS0NBSWlIWEVzSUFjVExjenRXd2RPa0MxS1pDVGN6LTN6RHRCQm95VTNWRk5lUmVJZ1JoSGhHNFl3VllZWEFHWmJuV2xId1JmZTB5TUktRGFORUozTjJrVDI1aTIuUEJETnhSWHR0dEdlSThxOXhqM0xBTUxNMWRRTU85LThJeV9GYXJYTjBmMA.rG-rgs4TMDfEUrn6SpLWHTO5zvonKNrcj1nuxKNfak56LCoKc2_aKC0EfeKLqZCnH80qzjMF22bm9kGc_6HRFw8mixNJ2R9F6tZq0wusCDwN-Nz9YW_dnjH-Lrn-iSI1k5Q-Ci2qmv4o3w4y92z9IVelHYnAGrg5VWKsS8ZCwbgnQRWuErY-JjV-XfAfXeqWthubmKQLetRMCc5lTYiLyHBoyp-bIXr3CDu_JokJJJhYmXuF9uQXJDUe51Ke8CEETTXvGGeekb0OQCfwIOBgmYJnocm-n_9Dt9wsI41UoIInbmBbQTYPD_6fE3KQidg-1wJ0dVgr-_1BEjjEQd7jjw';
     }
 
     componentDidMount() {
@@ -36,12 +38,23 @@ class App extends Component {
     }
 
     componentDidUpdate() {
-        !this.state.renderPrefaceMap && this.state.playAnimation && anime({
-            targets: ['#app', '#app .input-fields'],
-            opacity: [0, 1],
-            easing: 'easeOutQuad',
-            duration: 3000
-        });
+        if (!this.state.renderPrefaceMap && this.playAnimation) {
+            anime({
+                targets: ['#app', '#app .input-fields'],
+                opacity: [0, 1],
+                easing: 'easeOutQuad',
+                duration: 3000
+            });
+            this.playAnimation = false;
+            $('#input-destination').on('keypress', function() {
+                let that = document.getElementById('input-destination');
+                clearTimeout(that.timeoutRegister);
+                that.timeoutRegister = setTimeout(async () => {
+                    const { items: data } = await this.fetchResponse();
+                    this.setState({ autoComplete: data });
+                }, 1000);
+            }.bind(this));
+        }
     }
 
     render() {
@@ -81,6 +94,15 @@ class App extends Component {
                                     >
                                         Please choose a destination.
                                     </Form.Control.Feedback>
+                                    <Form.Text>
+                                        {this.state.autoComplete.slice(0, 5).map((e, i) => (
+                                            <Alert key={i} variant='info'
+                                                onClick={e => this.autoFill(e)}
+                                            >
+                                                {e.title}
+                                            </Alert>
+                                        ))}
+                                    </Form.Text>
                                 </Form.Group>
                             </div>
                             <div className='col-2'>
@@ -117,6 +139,11 @@ class App extends Component {
         );
     }
 
+    autoFill = e => {
+        $('#input-destination').val(e.currentTarget.innerText);
+        this.setState({ autoComplete: [] });
+    }
+
     handleGetStartedBtn = async () => {
         const [_, pos] = await Promise.all([
             new Promise(resolve => {
@@ -142,17 +169,18 @@ class App extends Component {
             })
         ]);
         $('#app .container').removeClass('hidden');
+        this.playAnimation = true;
         this.setState({
             renderPrefaceMap: false,
-            playAnimation: true,
             currentLocation: {
                 lat: pos.coords.latitude,
-                long: pos.coords.longitude
+                long: pos.coords.longitude,
+                altitude: 2000
             }
         });
     };
 
-    submitSearchRequest = e => {
+    submitSearchRequest = async e => {
         e.preventDefault();
         const form = e.currentTarget;
         if ($('#input-distance').val() === 'Within')
@@ -160,12 +188,29 @@ class App extends Component {
         else if (!form.checkValidity()) {
             e.stopPropagation();
             $('#input-distance').removeClass('is-invalid');
-            this.setState({ playAnimation: false, validated: true });
+            this.setState({ validated: true });
         }
         else {
             $('#input-distance').removeClass('is-invalid');
-            this.setState({ requestSubmitted: true, playAnimation: false, validated: true });
+            this.setState({ requestSubmitted: true, validated: true });
         }
+        // validation finished, submit request
+        const { items: data } = await this.fetchResponse();
+        console.log(data);
+    };
+
+    fetchResponse = async () => {
+        const dest = $('#input-destination').val();
+        const url = /* proxy */ "https://cors-anywhere.herokuapp.com/" + /* api */ `https://geocode.search.hereapi.com/v1/geocode?q=${dest}`;
+        const res = await fetch(url, {
+            method: 'GET', // GET, POST, PUT, DELETE, etc.
+            headers: {
+                'Authorization': `Bearer ${this.geocoderToken}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        !res.ok && console.warn(res.statusText);
+        return res.json(); // array of matched candidate locations
     };
 }
 
