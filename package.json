@@ -28,13 +28,16 @@
     "webpack-cli": "^3.3.11"
   },
   "dependencies": {
+    "@here/harp-geojson-datasource": "^0.13.0",
     "@here/harp-map-controls": "^0.13.0",
     "@here/harp-map-theme": "^0.13.0",
     "@here/harp-mapview": "^0.13.0",
     "@here/harp-omv-datasource": "^0.13.0",
     "animejs": "^3.1.0",
     "bootstrap": "^4.4.1",
+    "geojson": "^0.5.0",
     "jquery": "^3.4.1",
+    "lodash": "^4.17.15",
     "react": "^16.13.0",
     "react-bootstrap": "^1.0.0-beta.17",
     "react-dom": "^16.13.0",

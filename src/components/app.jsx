@@ -17,8 +17,15 @@ class App extends Component {
             requestSubmitted: false,
             validated: false,
             currentLocation: {},
-            autoComplete: []
+            autoComplete: [],
+            destination: {}
         };
+        this.rangeMapping = {
+            '100 m': 800,
+            '200 m': 1000,
+            '500 m': 2000,
+            '1 km': 4000
+        },
         this.geocoderToken = 'eyJhbGciOiJSUzUxMiIsImN0eSI6IkpXVCIsImlzcyI6IkhFUkUiLCJhaWQiOiI4VjFyQ1VIYTQxMk1zZHlqRGpyTyIsImlhdCI6MTU4MzAzOTQ3MSwiZXhwIjoxNTgzMTI1ODcxLCJraWQiOiJqMSJ9.ZXlKaGJHY2lPaUprYVhJaUxDSmxibU1pT2lKQk1qVTJRMEpETFVoVE5URXlJbjAuLjBPby1GaWUzemIzY3NGTG1zVVdyZlEuZXZKTUpnTHhCaHZUZkF4d3pTNFZRaVNnRmIxczBOUHJGc0JvS0NBSWlIWEVzSUFjVExjenRXd2RPa0MxS1pDVGN6LTN6RHRCQm95VTNWRk5lUmVJZ1JoSGhHNFl3VllZWEFHWmJuV2xId1JmZTB5TUktRGFORUozTjJrVDI1aTIuUEJETnhSWHR0dEdlSThxOXhqM0xBTUxNMWRRTU85LThJeV9GYXJYTjBmMA.rG-rgs4TMDfEUrn6SpLWHTO5zvonKNrcj1nuxKNfak56LCoKc2_aKC0EfeKLqZCnH80qzjMF22bm9kGc_6HRFw8mixNJ2R9F6tZq0wusCDwN-Nz9YW_dnjH-Lrn-iSI1k5Q-Ci2qmv4o3w4y92z9IVelHYnAGrg5VWKsS8ZCwbgnQRWuErY-JjV-XfAfXeqWthubmKQLetRMCc5lTYiLyHBoyp-bIXr3CDu_JokJJJhYmXuF9uQXJDUe51Ke8CEETTXvGGeekb0OQCfwIOBgmYJnocm-n_9Dt9wsI41UoIInbmBbQTYPD_6fE3KQidg-1wJ0dVgr-_1BEjjEQd7jjw';
     }
 
@@ -109,10 +116,7 @@ class App extends Component {
                                 <Form.Group controlId='input-distance'>
                                     <Form.Control as='select' required>
                                         <option>Within</option>
-                                        <option>100 m</option>
-                                        <option>200 m</option>
-                                        <option>500 m</option>
-                                        <option>1 km</option>
+                                        {Object.keys(this.rangeMapping).map((e, i) => <option key={i}>{e}</option>)}
                                     </Form.Control>
                                     <Form.Control.Feedback type='invalid'
                                         className='alert alert-danger'
@@ -131,8 +135,9 @@ class App extends Component {
                         </Form>
                     </Container>
                     { !this.state.renderPrefaceMap &&
-                        <Map enableControls='true'
+                        <Map enableControls={true}
                             currentLocation={this.state.currentLocation}
+                            destination={this.state.destination}
                         /> }
                 </main>
             </Fragment>
@@ -196,7 +201,15 @@ class App extends Component {
         }
         // validation finished, submit request
         const { items: data } = await this.fetchResponse();
-        console.log(data);
+        this.setState({
+            requestSubmitted: false,
+            currentLocation: {
+                lat: this.state.currentLocation.lat,
+                long: this.state.currentLocation.long,
+                altitude: this.rangeMapping[$('#input-distance').val()]
+            },
+            destination: data[0]
+        });
     };
 
     fetchResponse = async () => {

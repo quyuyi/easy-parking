@@ -5,8 +5,7 @@ module.exports = addHarpWebpackConfig(
     {
         mode: "development",
         entry: {
-            "index": "./src/index.js",
-            "harp-gl-decoder": "./src/harp-gl-decoder.js"
+            "index": "./src/index.js"
         },
         output: {
             filename: "[name].bundle.js",
