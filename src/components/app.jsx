@@ -4,7 +4,8 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
 import TitleSVG from './title-svg';
-import Map from './map';
+import HarpMap from './harp-map';
+import HereMap from './here-map';
 
 import anime from 'animejs';
 const $ = require('jquery');
@@ -18,15 +19,16 @@ class App extends Component {
             validated: false,
             currentLocation: {},
             autoComplete: [],
-            destination: {}
+            destination: {},
+            altitude: 17
         };
         this.rangeMapping = {
-            '100 m': 800,
-            '200 m': 1000,
-            '500 m': 2000,
-            '1 km': 4000
+            '100 m': 18,
+            '200 m': 17,
+            '500 m': 16,
+            '1 km': 14
         },
-        this.geocoderToken = 'eyJhbGciOiJSUzUxMiIsImN0eSI6IkpXVCIsImlzcyI6IkhFUkUiLCJhaWQiOiI4VjFyQ1VIYTQxMk1zZHlqRGpyTyIsImlhdCI6MTU4MzAzOTQ3MSwiZXhwIjoxNTgzMTI1ODcxLCJraWQiOiJqMSJ9.ZXlKaGJHY2lPaUprYVhJaUxDSmxibU1pT2lKQk1qVTJRMEpETFVoVE5URXlJbjAuLjBPby1GaWUzemIzY3NGTG1zVVdyZlEuZXZKTUpnTHhCaHZUZkF4d3pTNFZRaVNnRmIxczBOUHJGc0JvS0NBSWlIWEVzSUFjVExjenRXd2RPa0MxS1pDVGN6LTN6RHRCQm95VTNWRk5lUmVJZ1JoSGhHNFl3VllZWEFHWmJuV2xId1JmZTB5TUktRGFORUozTjJrVDI1aTIuUEJETnhSWHR0dEdlSThxOXhqM0xBTUxNMWRRTU85LThJeV9GYXJYTjBmMA.rG-rgs4TMDfEUrn6SpLWHTO5zvonKNrcj1nuxKNfak56LCoKc2_aKC0EfeKLqZCnH80qzjMF22bm9kGc_6HRFw8mixNJ2R9F6tZq0wusCDwN-Nz9YW_dnjH-Lrn-iSI1k5Q-Ci2qmv4o3w4y92z9IVelHYnAGrg5VWKsS8ZCwbgnQRWuErY-JjV-XfAfXeqWthubmKQLetRMCc5lTYiLyHBoyp-bIXr3CDu_JokJJJhYmXuF9uQXJDUe51Ke8CEETTXvGGeekb0OQCfwIOBgmYJnocm-n_9Dt9wsI41UoIInbmBbQTYPD_6fE3KQidg-1wJ0dVgr-_1BEjjEQd7jjw';
+        this.geocoderToken = 'eyJhbGciOiJSUzUxMiIsImN0eSI6IkpXVCIsImlzcyI6IkhFUkUiLCJhaWQiOiI4VjFyQ1VIYTQxMk1zZHlqRGpyTyIsImlhdCI6MTU4MzE4MzAyNiwiZXhwIjoxNTgzMjY5NDI2LCJraWQiOiJqMSJ9.ZXlKaGJHY2lPaUprYVhJaUxDSmxibU1pT2lKQk1qVTJRMEpETFVoVE5URXlJbjAuLlA3cVFvNXVYenBoeGZLS0pDalNfdEEudUYyVmlmRl82LWZsOTBBYnJQRWdpV2RsR0RyS3VXandmMVlCLVV0aTc1QWVRcTJmay0zXzRYd2wxSWxycV9uZzRZa1VyT2N5ZmJjM1pYWU8xM2QtUlJoR2xzTmhCTHJUeE14d2VMZDF1QVctR1JOTk4tU2RKejBJUGVobzQ1Q3guanVuWkVKZkN6NU93cF9YT2hVZjQtMjhBcE9SamIyak1yQndLZFFWSDNsTQ.SodEDk_xtVzfSpY82HbU-K6O3ePS784Sw8m1QTLG4TCuSOmZX3K-xbB-ajsdRBFps7dpndR17OO5N4FmD6s4uFiFuiuwGPrBJ2fNm0NmHRYaW3FNO9PJJGzKOHqNyf7zAFlU_TwX_yp1Rhfzc39jOcnjLPUnmaFiLi9g9pYo2macBieJ3YK2MQf0JMtTbN80TC7aGW91GeX4Wqtgo-qXV0c8ancjA3BkJe1jXXRoLeYgUIcnCamtpv10cU0zlFd7CTWhWczZLSYezJgYGPRszZdgPcVNzjCJT9991PdQSUuPGVld0WfM98XCw8VR60JQPEIiErKFRJIPgxbAx25ZVQ';
     }
 
     componentDidMount() {
@@ -85,7 +87,7 @@ class App extends Component {
                             </div>
                         </Container>
                     </div>
-                    { this.state.renderPrefaceMap && <Map /> }
+                    { this.state.renderPrefaceMap && <HarpMap /> }
                 </div>
                 <main id='app'>
                     <Container className='hidden'>
@@ -135,7 +137,8 @@ class App extends Component {
                         </Form>
                     </Container>
                     { !this.state.renderPrefaceMap &&
-                        <Map enableControls={true}
+                        <HereMap
+                            altitude={this.state.altitude}
                             currentLocation={this.state.currentLocation}
                             destination={this.state.destination}
                         /> }
@@ -179,9 +182,9 @@ class App extends Component {
             renderPrefaceMap: false,
             currentLocation: {
                 lat: pos.coords.latitude,
-                long: pos.coords.longitude,
-                altitude: 2000
-            }
+                lng: pos.coords.longitude
+            },
+            altitude: 17
         });
     };
 
@@ -203,11 +206,7 @@ class App extends Component {
         const { items: data } = await this.fetchResponse();
         this.setState({
             requestSubmitted: false,
-            currentLocation: {
-                lat: this.state.currentLocation.lat,
-                long: this.state.currentLocation.long,
-                altitude: this.rangeMapping[$('#input-distance').val()]
-            },
+            altitude: this.rangeMapping[$('#input-distance').val()],
             destination: data[0]
         });
     };
