@@ -15,8 +15,6 @@ class App extends Component {
         super(props);
         this.state = {
             renderPrefaceMap: true,
-            requestSubmitted: false,
-            validated: false,
             currentLocation: {},
             autoComplete: [],
             destination: {},
@@ -91,7 +89,7 @@ class App extends Component {
                 </div>
                 <main id='app'>
                     <Container className='hidden'>
-                        <Form noValidate validated={this.state.validated}
+                        <Form noValidate validated={false}
                             className='row input-fields'
                             onSubmit={e => this.submitSearchRequest(e)}
                         >
@@ -128,9 +126,7 @@ class App extends Component {
                                 </Form.Group>
                             </div>
                             <div className='col-3'>
-                                <Button variant='success' type='submit'
-                                    disabled={this.state.requestSubmitted}
-                                >
+                                <Button variant='success' type='submit'>
                                     Search
                                 </Button>
                             </div>
@@ -196,16 +192,17 @@ class App extends Component {
         else if (!form.checkValidity()) {
             e.stopPropagation();
             $('#input-distance').removeClass('is-invalid');
-            this.setState({ validated: true });
+            form.classList.add('was-validated');
         }
         else {
             $('#input-distance').removeClass('is-invalid');
-            this.setState({ requestSubmitted: true, validated: true });
+            form.classList.add('was-validated');
+            document.querySelector('.btn.btn-success').disabled = true;
         }
         // validation finished, submit request
         const { items: data } = await this.fetchResponse();
+        document.querySelector('.btn.btn-success').disabled = false;
         this.setState({
-            requestSubmitted: false,
             altitude: this.rangeMapping[$('#input-distance').val()],
             destination: data[0]
         });
