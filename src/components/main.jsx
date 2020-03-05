@@ -74,27 +74,29 @@ class Main extends Component {
     fetchResponse = async () => {
         const dest = $('#input-destination').val();
         const url = /* proxy */ "https://cors-anywhere.herokuapp.com/" + /* api */ `https://geocode.search.hereapi.com/v1/geocode?q=${dest}`;
-        let res = await fetch(url, {
-            method: 'GET', // GET, POST, PUT, DELETE, etc.
-            headers: {
-                'Authorization': `Bearer ${this.geocoderToken}`,
-                'Content-Type': 'application/json'
-            }
-        });
-        if (res.ok) {
-            const data = await res.json();
+        const [res1, res2] = await Promise.all([
+            fetch(url, {
+                method: 'GET', // GET, POST, PUT, DELETE, etc.
+                headers: {
+                    'Authorization': `Bearer ${this.geocoderToken}`,
+                    'Content-Type': 'application/json'
+                }
+            }),
+            fetch(`https://nominatim.openstreetmap.org/search/${dest}?format=json`, {
+                method: 'GET'
+            })
+        ]);
+        if (res1.ok) {
+            const data = await res1.json();
             return new Promise.resolve(data.items);
         }
-        console.warn(res.statusText);
+        console.warn(res1.statusText);
         // here api expired, use openstreetmap instead
-        res = await fetch(`https://nominatim.openstreetmap.org/search/${dest}?format=json`, {
-            method: 'GET'
-        });
-        if (!res.ok) {
-            console.warn(res.statusText);
+        if (!res2.ok) {
+            console.warn(res2.statusText);
             return new Promise.resolve([]);
         }
-        let data = await res.json();
+        let data = await res2.json();
         return new Promise(resolve => {
             data.sort(
                 (a, b) => this.distanceFromCurrentLocation(a) - this.distanceFromCurrentLocation(b)
