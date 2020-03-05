@@ -18,6 +18,7 @@ class Main extends Component {
             '500 m': 16,
             '1 km': 14
         };
+        this.geocoderToken = 'eyJhbGciOiJSUzUxMiIsImN0eSI6IkpXVCIsImlzcyI6IkhFUkUiLCJhaWQiOiI4VjFyQ1VIYTQxMk1zZHlqRGpyTyIsImlhdCI6MTU4MzE4MzAyNiwiZXhwIjoxNTgzMjY5NDI2LCJraWQiOiJqMSJ9.ZXlKaGJHY2lPaUprYVhJaUxDSmxibU1pT2lKQk1qVTJRMEpETFVoVE5URXlJbjAuLlA3cVFvNXVYenBoeGZLS0pDalNfdEEudUYyVmlmRl82LWZsOTBBYnJQRWdpV2RsR0RyS3VXandmMVlCLVV0aTc1QWVRcTJmay0zXzRYd2wxSWxycV9uZzRZa1VyT2N5ZmJjM1pYWU8xM2QtUlJoR2xzTmhCTHJUeE14d2VMZDF1QVctR1JOTk4tU2RKejBJUGVobzQ1Q3guanVuWkVKZkN6NU93cF9YT2hVZjQtMjhBcE9SamIyak1yQndLZFFWSDNsTQ.SodEDk_xtVzfSpY82HbU-K6O3ePS784Sw8m1QTLG4TCuSOmZX3K-xbB-ajsdRBFps7dpndR17OO5N4FmD6s4uFiFuiuwGPrBJ2fNm0NmHRYaW3FNO9PJJGzKOHqNyf7zAFlU_TwX_yp1Rhfzc39jOcnjLPUnmaFiLi9g9pYo2macBieJ3YK2MQf0JMtTbN80TC7aGW91GeX4Wqtgo-qXV0c8ancjA3BkJe1jXXRoLeYgUIcnCamtpv10cU0zlFd7CTWhWczZLSYezJgYGPRszZdgPcVNzjCJT9991PdQSUuPGVld0WfM98XCw8VR60JQPEIiErKFRJIPgxbAx25ZVQ';
     }
 
     componentDidMount() {
@@ -66,27 +67,49 @@ class Main extends Component {
         }
         this.setState({
             altitude: this.rangeMapping[$('#input-distance').val()],
-            destination: {
-                position: {
-                    lat: data[0].lat,
-                    lng: data[0].lon
-                },
-                title: data[0]['display_name']
-            }
+            destination: data[0]
         });
     };
 
     fetchResponse = async () => {
         const dest = $('#input-destination').val();
-        const res = await fetch(`https://nominatim.openstreetmap.org/search/${dest}?format=json`, {
+        const url = /* proxy */ "https://cors-anywhere.herokuapp.com/" + /* api */ `https://geocode.search.hereapi.com/v1/geocode?q=${dest}`;
+        let res = await fetch(url, {
+            method: 'GET', // GET, POST, PUT, DELETE, etc.
+            headers: {
+                'Authorization': `Bearer ${this.geocoderToken}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        if (res.ok) {
+            const data = await res.json();
+            return new Promise.resolve(data.items);
+        }
+        console.warn(res.statusText);
+        // here api expired, use openstreetmap instead
+        res = await fetch(`https://nominatim.openstreetmap.org/search/${dest}?format=json`, {
             method: 'GET'
         });
-        !res.ok && console.warn(res.statusText);
+        if (!res.ok) {
+            console.warn(res.statusText);
+            return new Promise.resolve([]);
+        }
         let data = await res.json();
         return new Promise(resolve => {
-            resolve(data.sort(
+            data.sort(
                 (a, b) => this.distanceFromCurrentLocation(a) - this.distanceFromCurrentLocation(b)
-            ));
+            );
+            let rst = [];
+            data.forEach(item => {
+                rst.push({
+                    position: {
+                        lat: item.lat,
+                        lng: item.lon
+                    },
+                    title: item['display_name']
+                });
+            });
+            resolve(rst);
         });
     };
 }

@@ -20,7 +20,7 @@ class SearchForm extends Component {
             that.timeoutRegister = setTimeout(async () => {
                 const data = await this.props.fetchResponse();
                 this.setState({ autoComplete: data });
-            }, 1000);
+            }, 800);
         });
     }
 
@@ -48,7 +48,7 @@ class SearchForm extends Component {
                                     <Alert key={i} variant='info'
                                         onClick={ e => this.autoFill(e) }
                                     >
-                                        {e['display_name']}
+                                        {e.title}
                                     </Alert>
                                 ))
                             } </Form.Text>
@@ -98,6 +98,7 @@ class SearchForm extends Component {
         }
         field.classList.remove('is-invalid');
         // validation finished, submit request
+        this.setState({ autoComplete: [] });
         this.props.submitSearchRequest(this.submitButton);
     }
 }
