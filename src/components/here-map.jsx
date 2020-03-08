@@ -101,9 +101,45 @@ class HereMap extends Component {
     redrawBubbles = async () => {
         const zoomLevel = await new Promise(resolve => {
             this.ui.getBubbles().forEach(b => b.close());
+            this.clearBubble('clBubble').clearBubble('destBubble');
+            this.bubbles.plBubbles.forEach(b => this.ui.removeBubble(b));
+            this.bubbles.plBubbles = [];
             setTimeout(() => resolve(this.map.getZoom()), 300);
         });
-        this.markCurrentLocation(zoomLevel).markDestination(zoomLevel).markParkingLots(zoomLevel);
+        // redraw current location bubble
+        let tmp = this.markers.clMarker.getGeometry();
+        this.bubbles.clBubble = new H.ui.InfoBubble({
+            lat: tmp.lat + this.approxRegression(zoomLevel),
+            lng: tmp.lng
+        }, {
+            content: 'You are here'
+        });
+        this.ui.addBubble(this.bubbles.clBubble);
+        // redraw destination bubble
+        if (this.markers.destMarker) {
+            tmp = this.markers.destMarker.getGeometry();
+            this.bubbles.destBubble = new H.ui.InfoBubble({
+                lat: tmp.lat + this.approxRegression(zoomLevel),
+                lng: tmp.lng
+            }, {
+                content: 'Your destination'
+            });
+            this.ui.addBubble(this.bubbles.destBubble);
+        }
+        // redraw parking lots bubble
+        this.markers.plMarkers.forEach(pl => {
+            tmp = pl.getData();
+            console.log(tmp);
+            const bubble = new H.ui.InfoBubble({
+                lat: tmp.position.lat + this.approxRegression(zoomLevel),
+                lng: tmp.position.lng
+            }, {
+                content: `<b>${tmp.num}</b>`
+            });
+            this.bubbles.plBubbles.push(bubble);
+            this.ui.addBubble(bubble);
+        });
+        // close all the bubbles at the end
         this.ui.getBubbles().forEach(b => b.close());
         return this;
     };
@@ -138,6 +174,10 @@ class HereMap extends Component {
             this.bubbles.clBubble.close();
             document.getElementById('here-map').style.cursor = 'default';
         });
+        this.markers.clMarker.addEventListener('pointerup', e => {
+            this.map.setCenter(this.markers.clMarker.getGeometry()).setZoom(17);
+            this.redrawBubbles();
+        });
         return this;
     };
 
@@ -168,6 +208,10 @@ class HereMap extends Component {
             this.markers.destMarker.setZIndex(3);
             this.bubbles.destBubble.close();
             document.getElementById('here-map').style.cursor = 'default';
+        });
+        this.markers.destMarker.addEventListener('pointerup', e => {
+            this.map.setCenter(this.markers.destMarker.getGeometry()).setZoom(17);
+            this.redrawBubbles();
         });
         return this;
     };

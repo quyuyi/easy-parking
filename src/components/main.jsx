@@ -42,20 +42,25 @@ class Main extends Component {
                     altitude={this.state.altitude}
                     currentLocation={this.props.currentLocation}
                     destination={this.state.destination}
+                    dist={this.dist}
                 />
             </main>
         );
     }
 
-    distanceFromCurrentLocation = p => {
-        const { lat, lng } = this.props.currentLocation;
-        if (p.lat === lat && p.lon === lng) return 0;
+    dist(p1, p2) {
+        if (p1.lat === p2.lat && p1.lng === p2.lng) return 0;
         const R = 6371; // km
-        const dlat = (p.lat - lat) * Math.PI / 180;
-        const dlon = (p.lon - lng) * Math.PI / 180;
-        const a = Math.sin(dlat / 2) ** 2 + Math.cos(lat * Math.PI / 180) * Math.cos(p.lat * Math.PI / 180) * (Math.sin(dlon / 2) ** 2);
+        const dlat = (p1.lat - p2.lat) * Math.PI / 180;
+        const dlon = (p1.lng - p2.lng) * Math.PI / 180;
+        const a = Math.sin(dlat / 2) ** 2 + Math.cos(p1.lat * Math.PI / 180) * Math.cos(p2.lat * Math.PI / 180) * (Math.sin(dlon / 2) ** 2);
         return R * 2 * Math.asin(Math.sqrt(a)); // km
-    };
+    }
+
+    distanceFromCurrentLocation = p => this.dist(this.props.currentLocation, {
+        lat: p.lat,
+        lng: p.lon
+    });
 
     submitSearchRequest = async btn => {
         btn.disabled = true;
