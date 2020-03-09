@@ -1,21 +1,34 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import 'here-js-api/scripts/mapsjs-core';
 import 'here-js-api/scripts/mapsjs-service';
 import 'here-js-api/scripts/mapsjs-ui';
 import 'here-js-api/scripts/mapsjs-mapevents';
 import 'here-js-api/styles/mapsjs-ui.css';
+import InfoCard from './info-card';
 
+import anime from 'animejs';
 const _ = require('lodash');
+const DB = require('../db');
 
 class HereMap extends Component {
     constructor(props) {
         super(props);
-        this.parkingLots = []; // each element is an object with two fields (position, num)
+        this.state = {
+            showInfoCard: false,
+            pl: {}
+        };
+        this.parkingLots = []; // each element is an object with six fields (position, title, address, capacity, vacant, img)
         this.markers = {
             plMarkers: []
         };
         this.bubbles = {
             plBubbles: []
+        };
+        this.reverseMapping = {
+            18: 100,
+            17: 200,
+            16: 500,
+            14: 1000
         };
     }
 
@@ -49,12 +62,14 @@ class HereMap extends Component {
         if (!_.isEqual(destination, prevProps.destination)) {
             this.map.setCenter(destination.position)
                 .setZoom(this.props.altitude);
+            this.markCurrentLocation().markDestination();
+            this.searchParkingLots().markParkingLots();
         }
         else if (altitude !== prevProps.altitude) {
             this.map.setZoom(this.props.altitude);
+            this.redrawBubbles();
+            this.searchParkingLots().markParkingLots();
         }
-        this.markCurrentLocation().markDestination();
-        this.searchParkingLots().markParkingLots();
     }
 
     componentWillUnmount() {
@@ -67,7 +82,10 @@ class HereMap extends Component {
 
     render() {
         return (
-            <div id='here-map'></div>
+            <Fragment>
+                <div id='here-map'></div>
+                {this.state.showInfoCard && <InfoCard pl={this.state.pl} dist={this.props.dist} />}
+            </Fragment>
         );
     }
 
@@ -134,7 +152,7 @@ class HereMap extends Component {
                 lat: tmp.position.lat + this.approxRegression(zoomLevel),
                 lng: tmp.position.lng
             }, {
-                content: `<b>${tmp.num}</b>`
+                content: `Vacant: <b>${tmp.vacant}</b>`
             });
             this.bubbles.plBubbles.push(bubble);
             this.ui.addBubble(bubble);
@@ -145,7 +163,14 @@ class HereMap extends Component {
     };
 
     searchParkingLots = () => {
-        // TODO: Not implemented
+        const maxDistance = this.reverseMapping[this.props.altitude];
+        this.parkingLots = [];
+        DB.forEach((pl, i) => {
+            if (this.props.dist(pl, this.props.destination) * 1000 > maxDistance)
+                return;
+            this.parkingLots.push(pl);
+            this.parkingLots[i].vacant = Math.floor(Math.random() * pl.capacity);
+        });
         return this;
     };
 
@@ -222,8 +247,8 @@ class HereMap extends Component {
         this.markers.plMarkers = [];
         this.bubbles.plBubbles = [];
         // this.parkingLots.length === 0 && alert('Sorry, no parking lots with vacant slots found.');
-        this.parkingLots.forEach(pl => {
-            const color = this.colorMapping(pl.num);
+        this.parkingLots.forEach((pl, i) => {
+            const color = this.colorMapping(pl.vacant);
             const marker = new H.map.Marker(pl.position, {
                 zIndex: 2,
                 data: pl, // add parking lot data to associated marker
@@ -235,20 +260,28 @@ class HereMap extends Component {
                 lat: pl.position.lat + this.approxRegression(zoomLevel || this.props.altitude),
                 lng: pl.position.lng
             }, {
-                content: `<b>${pl.num}</b>`
+                content: `Vacant: <b>${pl.vacant}</b>`
             });
             bubble.close(); // bubble is closed by default in case of overwhelming pop-ups
             this.bubbles.plBubbles.push(bubble);
             this.ui.addBubble(bubble);
-            marker.addEventListener('pointerenter', e => {
-                marker.setZIndex(100);
-                bubble.open();
+            this.markers.plMarkers[i].addEventListener('pointerenter', e => {
+                this.markers.plMarkers[i].setZIndex(100);
+                this.bubbles.plBubbles[i].open();
                 document.getElementById('here-map').style.cursor = 'pointer';
             });
-            marker.addEventListener('pointerleave', e => {
-                marker.setZIndex(2);
-                bubble.close();
+            this.markers.plMarkers[i].addEventListener('pointerleave', e => {
+                this.markers.plMarkers[i].setZIndex(2);
+                this.bubbles.plBubbles[i].close();
                 document.getElementById('here-map').style.cursor = 'default';
+            });
+            this.markers.plMarkers[i].addEventListener('pointerup', e => {
+                this.map.setCenter(this.markers.plMarkers[i].getGeometry()).setZoom(17);
+                this.redrawBubbles();
+                this.setState({
+                    showInfoCard: true,
+                    pl: pl
+                });
             });
         });
         return this;

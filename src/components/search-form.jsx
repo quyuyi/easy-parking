@@ -14,18 +14,11 @@ class SearchForm extends Component {
     }
 
     componentDidMount() {
-        document.getElementById('input-destination').addEventListener('keypress', () => {
-            let that = document.getElementById('input-destination');
-            clearTimeout(that.timeoutRegister);
-            that.timeoutRegister = setTimeout(async () => {
-                const data = await this.props.fetchResponse();
-                this.setState({ autoComplete: data });
-            }, 800);
-        });
+        document.getElementById('input-destination').addEventListener('keypress', this.typeListener);
     }
 
     componentWillUnmount() {
-        document.getElementById('input-destination').removeEventListener('keypress');
+        document.getElementById('input-destination').removeEventListener('keypress', this.typeListener);
     }
 
     render() {
@@ -36,7 +29,7 @@ class SearchForm extends Component {
                     onSubmit={ e => this.handleSearchRequest(e) }
                 >
                     <div className='col-6 col-sm-7'>
-                        <Form.Group controlId='input-destination'>
+                        <Form.Group controlId='input-destination' className='anime-control'>
                             <Form.Control type='text' placeholder='Your destination' required/>
                             <Form.Control.Feedback type='invalid'
                                 className='alert alert-danger'
@@ -101,6 +94,15 @@ class SearchForm extends Component {
         this.setState({ autoComplete: [] });
         this.props.submitSearchRequest(this.submitButton);
     }
+
+    typeListener = () => {
+        let that = document.getElementById('input-destination');
+        clearTimeout(that.timeoutRegister);
+        that.timeoutRegister = setTimeout(async () => {
+            const data = await this.props.fetchResponse();
+            this.setState({ autoComplete: data });
+        }, 800);
+    };
 }
 
 export default SearchForm;
