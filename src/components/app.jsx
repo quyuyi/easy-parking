@@ -26,15 +26,13 @@ class App extends Component {
 
     handleGetStartedBtn = async () => {
         const [_, pos] = await Promise.all([
-            new Promise(resolve => {
-                anime({
-                    targets: '.grey-bkg',
-                    opacity: [1, 0],
-                    translateY: '-100%',
-                    easing: 'easeInQuad',
-                    duration: 4000
-                }).finished.then(resolve);
-            }),
+            anime({
+                targets: '.grey-bkg',
+                opacity: [1, 0],
+                translateY: '-100%',
+                easing: 'easeInQuad',
+                duration: 4000
+            }).finished,
             new Promise(resolve => {
                 const geoLocationOptions = {
                     enableHighAccuracy: true,

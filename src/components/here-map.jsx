@@ -84,7 +84,11 @@ class HereMap extends Component {
         return (
             <Fragment>
                 <div id='here-map'></div>
-                {this.state.showInfoCard && <InfoCard pl={this.state.pl} dist={this.props.dist} />}
+                {this.state.showInfoCard && <InfoCard
+                    pl={this.state.pl}
+                    dist={this.props.dist}
+                    handleCloseButton={this.handleCloseButton}
+                />}
             </Fragment>
         );
     }
@@ -178,7 +182,7 @@ class HereMap extends Component {
         this.markers.clMarker && this.clearMarker('clMarker');
         this.bubbles.clBubble && this.clearBubble('clBubble');
         this.markers.clMarker = new H.map.Marker(this.props.currentLocation, {
-            zIndex: 1,
+            zIndex: 30,
             icon: new H.map.Icon(`<svg width="38" height="53" viewBox="0 0 38 53" fill="none" xmlns="http://www.w3.org/2000/svg"><g filter="url(#filter0_d)"><circle cx="19" cy="15" r="15" fill="#3B63F3"/></g><g filter="url(#filter1_d)"><path d="M19 45L6.00962 22.5L31.9904 22.5L19 45Z" fill="#3B63F3"/></g><circle cx="18.5" cy="14.5" r="7.5" fill="white"/><defs><filter id="filter0_d" x="0" y="0" width="38" height="38" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/><feOffset dy="4"/><feGaussianBlur stdDeviation="2"/><feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/><feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/><feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"/></filter><filter id="filter1_d" x="2.00961" y="22.5" width="33.9808" height="30.5" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/><feOffset dy="4"/><feGaussianBlur stdDeviation="2"/><feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/><feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/><feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"/></filter></defs></svg>`)
         });
         this.map.addObject(this.markers.clMarker);
@@ -190,17 +194,17 @@ class HereMap extends Component {
         });
         this.ui.addBubble(this.bubbles.clBubble);
         this.markers.clMarker.addEventListener('pointerenter', e => {
-            this.markers.clMarker.setZIndex(100);
+            e.target.setZIndex(10);
             this.bubbles.clBubble.open();
             document.getElementById('here-map').style.cursor = 'pointer';
         });
         this.markers.clMarker.addEventListener('pointerleave', e => {
-            this.markers.clMarker.setZIndex(1);
+            e.target.setZIndex(30);
             this.bubbles.clBubble.close();
             document.getElementById('here-map').style.cursor = 'default';
         });
         this.markers.clMarker.addEventListener('pointerup', e => {
-            this.map.setCenter(this.markers.clMarker.getGeometry()).setZoom(17);
+            this.map.setCenter(e.target.getGeometry()).setZoom(17);
             this.redrawBubbles();
         });
         return this;
@@ -213,7 +217,7 @@ class HereMap extends Component {
         const { destination } = this.props;
         if (!destination.position) return this;
         this.markers.destMarker = new H.map.Marker(destination.position, {
-            zIndex: 3,
+            zIndex: 20,
             icon: new H.map.Icon(`<svg width="38" height="53" viewBox="0 0 38 53" fill="none" xmlns="http://www.w3.org/2000/svg"><g filter="url(#filter0_d)"><circle cx="19" cy="15" r="15" fill="#F33B9E"/></g><g filter="url(#filter1_d)"><path d="M19 45L6.00962 22.5L31.9904 22.5L19 45Z" fill="#F33B9E"/></g><path d="M19 4L21.4697 11.6008H29.4616L22.996 16.2984L25.4656 23.8992L19 19.2016L12.5344 23.8992L15.004 16.2984L8.53838 11.6008H16.5303L19 4Z" fill="white"/><defs><filter id="filter0_d" x="0" y="0" width="38" height="38" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/><feOffset dy="4"/><feGaussianBlur stdDeviation="2"/><feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/><feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/><feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"/></filter><filter id="filter1_d" x="2.00962" y="22.5" width="33.9808" height="30.5" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/><feOffset dy="4"/><feGaussianBlur stdDeviation="2"/><feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/><feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/><feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"/></filter></defs></svg>`)
         });
         this.map.addObject(this.markers.destMarker);
@@ -225,17 +229,17 @@ class HereMap extends Component {
         });
         this.ui.addBubble(this.bubbles.destBubble);
         this.markers.destMarker.addEventListener('pointerenter', e => {
-            this.markers.destMarker.setZIndex(100);
+            e.target.setZIndex(10);
             this.bubbles.destBubble.open();
             document.getElementById('here-map').style.cursor = 'pointer';
         });
         this.markers.destMarker.addEventListener('pointerleave', e => {
-            this.markers.destMarker.setZIndex(3);
+            e.target.setZIndex(20);
             this.bubbles.destBubble.close();
             document.getElementById('here-map').style.cursor = 'default';
         });
         this.markers.destMarker.addEventListener('pointerup', e => {
-            this.map.setCenter(this.markers.destMarker.getGeometry()).setZoom(17);
+            this.map.setCenter(e.target.getGeometry()).setZoom(17);
             this.redrawBubbles();
         });
         return this;
@@ -250,7 +254,7 @@ class HereMap extends Component {
         this.parkingLots.forEach((pl, i) => {
             const color = this.colorMapping(pl.vacant);
             const marker = new H.map.Marker(pl.position, {
-                zIndex: 2,
+                zIndex: 40,
                 data: pl, // add parking lot data to associated marker
                 icon: new H.map.Icon(`<svg width="38" height="53" viewBox="0 0 38 53" fill="none" xmlns="http://www.w3.org/2000/svg"><g filter="url(#filter0_d)"><circle cx="19" cy="15" r="15" fill="${color}"/></g><g filter="url(#filter1_d)"><path d="M19 45L6.00962 22.5L31.9904 22.5L19 45Z" fill="${color}"/></g><path d="M17.7441 17.9902V23H14.8145V8.78125H20.3613C21.429 8.78125 22.3665 8.97656 23.1738 9.36719C23.9876 9.75781 24.6126 10.3145 25.0488 11.0371C25.485 11.7533 25.7031 12.5703 25.7031 13.4883C25.7031 14.8815 25.2246 15.9818 24.2676 16.7891C23.3171 17.5898 21.9987 17.9902 20.3125 17.9902H17.7441ZM17.7441 15.6172H20.3613C21.1361 15.6172 21.7253 15.4349 22.1289 15.0703C22.5391 14.7057 22.7441 14.1849 22.7441 13.5078C22.7441 12.8112 22.5391 12.248 22.1289 11.8184C21.7188 11.3887 21.1523 11.1673 20.4297 11.1543H17.7441V15.6172Z" fill="white"/><defs><filter id="filter0_d" x="0" y="0" width="38" height="38" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/><feOffset dy="4"/><feGaussianBlur stdDeviation="2"/><feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/><feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/><feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"/></filter><filter id="filter1_d" x="2.00962" y="22.5" width="33.9808" height="30.5" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/><feOffset dy="4"/><feGaussianBlur stdDeviation="2"/><feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/><feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/><feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"/></filter></defs></svg>`)
             });
@@ -266,17 +270,17 @@ class HereMap extends Component {
             this.bubbles.plBubbles.push(bubble);
             this.ui.addBubble(bubble);
             this.markers.plMarkers[i].addEventListener('pointerenter', e => {
-                this.markers.plMarkers[i].setZIndex(100);
+                e.target.setZIndex(10);
                 this.bubbles.plBubbles[i].open();
                 document.getElementById('here-map').style.cursor = 'pointer';
             });
             this.markers.plMarkers[i].addEventListener('pointerleave', e => {
-                this.markers.plMarkers[i].setZIndex(2);
+                e.target.setZIndex(40);
                 this.bubbles.plBubbles[i].close();
                 document.getElementById('here-map').style.cursor = 'default';
             });
             this.markers.plMarkers[i].addEventListener('pointerup', e => {
-                this.map.setCenter(this.markers.plMarkers[i].getGeometry()).setZoom(17);
+                this.map.setCenter(e.target.getGeometry()).setZoom(17);
                 this.redrawBubbles();
                 this.setState({
                     showInfoCard: true,
@@ -284,6 +288,11 @@ class HereMap extends Component {
                 });
             });
         });
+        return this;
+    };
+
+    handleCloseButton = () => {
+        this.setState({ showInfoCard: false });
         return this;
     };
 }
