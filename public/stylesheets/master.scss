@@ -149,5 +149,43 @@ form {
                 -2px -4px 4px rgba(255, 255, 255, 1),
                 2px 4px 4px rgba(0, 0, 0, 0.25);
         }
+        .info-container {
+            width: 100%;
+            padding: 10px 20px;
+            div {
+                margin-bottom: 35px;
+            }
+            div > * {
+                vertical-align: middle;
+            }
+            #address {
+                margin-left: 20px;
+            }
+            #distance-from-you-to-pl {
+                margin-left: 10px;
+                margin-right: 40px;
+            }
+            span.badge {
+                margin-left: 5px;
+            }
+            #distance-from-dest-to-pl {
+                margin-left: 10px;
+            }
+            div[name='capacity/vacant'] button:first-child {
+                margin-right: 10px;
+            }
+        }
+    }
+}
+
+@media only screen and (max-height: 736px) {
+    #title {
+        margin-bottom: 15px;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .input-fields {
+        transform: translateX(15px);
     }
 }

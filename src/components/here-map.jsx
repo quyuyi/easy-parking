@@ -87,6 +87,7 @@ class HereMap extends Component {
                 {this.state.showInfoCard && <InfoCard
                     pl={this.state.pl}
                     dist={this.props.dist}
+                    colorMapping={this.colorMapping}
                     handleCloseButton={this.handleCloseButton}
                 />}
             </Fragment>
@@ -98,8 +99,8 @@ class HereMap extends Component {
     }
 
     colorMapping(n) {
-        if (n > 10) return '#30FF1E';
-        if (n > 5) return '#FFE81E';
+        if (n > 15) return '#30FF1E';
+        if (n > 8) return '#FFE81E';
         return '#FF1E1E';
     }
 
@@ -167,13 +168,18 @@ class HereMap extends Component {
     };
 
     searchParkingLots = () => {
+        const { dist, destination, currentLocation } = this.props;
         const maxDistance = this.reverseMapping[this.props.altitude];
         this.parkingLots = [];
-        DB.forEach((pl, i) => {
-            if (this.props.dist(pl, this.props.destination) * 1000 > maxDistance)
+        let i = 0;
+        DB.forEach(pl => {
+            if (dist(pl.position, destination.position) * 1000 > maxDistance)
                 return;
             this.parkingLots.push(pl);
             this.parkingLots[i].vacant = Math.floor(Math.random() * pl.capacity);
+            this.parkingLots[i].distanceFromYou = dist(pl.position, currentLocation).toFixed(2) + ' km';
+            this.parkingLots[i].distanceFromDest = Math.floor(dist(pl.position, destination.position) * 1000) + ' m';
+            i++;
         });
         return this;
     };
