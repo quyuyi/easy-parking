@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button';
+import Badge from 'react-bootstrap/Badge';
+import LocationSVG from './svg/location-svg';
+import FromYouToPL from './svg/from-you-to-pl-svg';
+import FromDestToPL from './svg/from-dest-to-pl-svg';
 
 import anime from 'animejs';
 
@@ -39,12 +43,38 @@ class InfoCard extends Component {
                     <img alt='parking lot photo' src={pl.img} />
                     <h4>{pl.title}</h4>
                     <hr/>
+                    <div className='info-container'>
+                        <div name='address'>
+                            <LocationSVG />
+                            <span id='address'>{pl.address}</span>
+                        </div>
+                        <div name='distance'>
+                            <FromYouToPL color={this.props.colorMapping(pl.vacant)} />
+                            <span id='distance-from-you-to-pl'>{pl.distanceFromYou}</span>
+                            <FromDestToPL color={this.props.colorMapping(pl.vacant)} />
+                            <span id='distance-from-dest-to-pl'>{pl.distanceFromDest}</span>
+                        </div>
+                        <div name='capacity/vacant'>
+                            <Button variant='primary'>
+                                Capacity <Badge variant='light'>{pl.capacity}</Badge>
+                            </Button>
+                            <Button variant={this.themeMapping(pl.vacant)}>
+                                Vacant <Badge variant='light'>{pl.vacant}</Badge>
+                            </Button>
+                        </div>
+                    </div>
                     <Button variant='primary' className='info-btn'>
                         View Parking Slots
                     </Button>
                 </div>
             </div>
         );
+    }
+
+    themeMapping(n) {
+        if (n > 15) return 'success';
+        if (n > 8) return 'warning';
+        return 'danger';
     }
 
     handleCloseButton = async () => {

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Container from 'react-bootstrap/Container';
-import TitleSVG from './title-svg';
+import TitleSVG from './svg/title-svg';
 import HarpMap from './harp-map';
 
 import anime from 'animejs';

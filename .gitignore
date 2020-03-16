@@ -1,4 +1,5 @@
 node_modules/
+public/javascripts/*.bundle.js*
 credentials.properties
 env/
 *.bundle.js
