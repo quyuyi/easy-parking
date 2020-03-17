@@ -178,6 +178,15 @@ form {
     }
 }
 
+#my-canvas {
+    position: absolute;
+    width: 70vw;
+    height: calc(70vw * 9 / 16);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
 @media only screen and (max-height: 736px) {
     #title {
         margin-bottom: 15px;
@@ -187,5 +196,10 @@ form {
 @media only screen and (max-width: 768px) {
     .input-fields {
         transform: translateX(15px);
+    }
+
+    #my-canvas {
+        width: 100vw;
+        height: calc(100vw * 9 / 16);
     }
 }

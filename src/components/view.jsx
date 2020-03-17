@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import ReactDom from 'react-dom';
-import '../../static/style.css';
-import ParkingLotsDB from '../db.js';
 import { paper } from 'paper';
+
+const ParkingLotsDB = require('../db.js');
 
 class View extends Component {
     constructor(props) {
@@ -13,15 +12,21 @@ class View extends Component {
     }
 
     componentDidMount() {
-        this.draw();
+        paper.setup(this.canvas);
+        this.resize();
+        window.addEventListener('resize', this.resize);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.resize);
     }
 
     render() {
-        let w = window.innerWidth;
-        let h = window.innerHeight;
         return (
-            <div id="view-continer">
-                <canvas id="myCanvas" width={w*0.8} height={h*0.8}></canvas>
+            <div id='grey-bkg'>
+                <canvas ref = { c => this.canvas = c; }
+                    id="my-canvas">
+                </canvas>
             </div>
         );
     }
@@ -30,9 +35,16 @@ class View extends Component {
         console.log("click!");
     }
 
-    draw() {
-        let canvas = document.getElementById("myCanvas");
-        paper.setup(canvas);
+    resize = () => {
+        [this.width, this.height] = [this.canvas.clientWidth, this.canvas.clientHeight];
+        this.draw();
+        return this;
+    };
+
+    draw = () => {
+        this.clear();
+        const { pl } = this.props;
+        const [widthRatio, heightRatio] = [this.width / pl.width, this.height / pl.height];
         let path = new paper.CompoundPath({
             children: [
                 new paper.Path.Line({
@@ -52,11 +64,16 @@ class View extends Component {
             strokeColor: 'black',
             fillColor: 'white',
         });
-        path.onClick = event => {
+        path.onClick = function(event) {
             console.log("click");
         }
         paper.view.draw();
-    }
+        return this;
+    };
+
+    clear = () => {
+
+    };
 }
 
 export default View;
