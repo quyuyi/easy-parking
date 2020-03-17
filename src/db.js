@@ -9,6 +9,8 @@ const ParkingLotsDB = [
         capacity: 30,
         img: '/public/images/2182-2306 Hayward St Parking.png',
         layout: {
+            length: 100,
+            width: 50,
             slots: [
                 {
                     coord: [10,0],

@@ -38,37 +38,25 @@ class View extends Component {
                 new paper.Path.Line({
                     from: [10, 0],
                     to: [10, 100],
-                    strokeColor: 'black',
-                    strokeWidth: 10,
                 }),
                 new paper.Path.Line({
                     from: [60, 0],
                     to: [60, 100],
-                    strokeColor: 'black',
-                    strokeWidth: 10,
+                }),
+                new paper.Path.Rectangle({
+                    from: [10, 0],
+                    to: [60, 100],
+                    opacity: 0,
                 })
             ],
+            strokeColor: 'black',
+            fillColor: 'white',
         });
+        path.onClick = event => {
+            console.log("click");
+        }
         paper.view.draw();
     }
 }
 
 export default View;
-
-/*
-    drawCanvas() {
-        let canvas = document.getElementById("myCanvas");
-        let ctx = canvas.getContext("2d");
-        this.state.layout.slots.map( coord => {
-            ctx.moveTo(coord[0], coord[1]);
-            ctx.lineTo(coord[0], coord[1] + 100);
-            ctx.stroke();
-        });
-        ctx.setLineDash([5, 3]);
-        this.state.layout.dash.map( item => {
-            ctx.moveTo(item[0], item[1]);
-            item[2] == 'x' ? ctx.lineTo(item[0] + item[3], item[1]) : ctx.lineTo(item[0], item[1] + item[3]);
-            ctx.stroke();
-        })
-    }
-*/
