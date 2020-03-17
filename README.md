@@ -13,7 +13,7 @@ c. mark blue/gold permission
 d. mark disable permission
 4. 2 options to implement the parking lot
 a. draw pictures and identify coordinates *html canvas*
-b. write html for each parklinf lot
+b. write html for each parkling lot
 5. backend database
 a. for parking slots occupy/unoccupy
 b. for html canvas

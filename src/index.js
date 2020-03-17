@@ -5,9 +5,10 @@ import React from 'react';
 import ReactDom from 'react-dom';
 import App from './components/app';
 import 'regenerator-runtime/runtime';
+import View from './components/view';
 
 const $ = require('jquery');
 
 $(() => {
-    ReactDom.render(<App />, document.getElementById('root'));
+    ReactDom.render(<View />, document.getElementById('root'));
 });

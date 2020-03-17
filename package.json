@@ -39,6 +39,7 @@
     "here-js-api": "^1.0.11",
     "jquery": "^3.4.1",
     "lodash": "^4.17.15",
+    "paper": "^0.12.4",
     "react": "^16.13.0",
     "react-bootstrap": "^1.0.0-beta.17",
     "react-dom": "^16.13.0",
