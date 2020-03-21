@@ -1,47 +1,47 @@
 const ParkingLotsDB = [
-    {
-        position: {
-            lat: 42.293658,
-            lng: -83.713711
-        },
-        title: '2182-2306 Hayward St Parking',
-        address: '2182-2306 Hayward St, Ann Arbor, MI 48109',
-        capacity: 30,
-        img: '/public/images/2182-2306 Hayward St Parking.png',
-        layout: {
-            parkSize: {length: 600, width: 400},
-            slotSize: {length: 100, width: 50},
-            slots: [
-                {x: 10, y: 0, occupied: true},
-                {x: 60, y: 0, occupied: false},
-                {coord: [110,0], occupied: false},
-                {coord: [160,0], occupied: false},
-                {coord: [210,0], occupied: false},
-                {coord: [260,0], occupied: false},
-                {x: 10, y: 150, occupied: false},
-                {x: 60, y: 150, occupied: false},
-                {coord: [110,150], occupied: false},
-                {coord: [160,150], occupied: false},
-                {coord: [210,150], occupied: true},
-                {coord: [260,150], occupied: false},
-                {x: 10, y: 250, occupied: false},
-                {x: 60, y: 250, occupied: false},
-                {coord: [110,250], occupied: false},
-                {coord: [160,250], occupied: false},
-                {coord: [210,250], occupied: false},
-                {coord: [260,250], occupied: false},
-                {x: 10, y: 400, occupied: false},
-                {x: 60, y: 400, occupied: false},
-                {coord: [110,400], occupied: false},
-                {coord: [160,400], occupied: false},
-                {coord: [210,400], occupied: false},
-                {coord: [260,400], occupied: false},
-            ],
-            dash: [
-                [10,250,'x',260]
-            ]
-        }
-    },
+    // {
+    //     position: {
+    //         lat: 42.293658,
+    //         lng: -83.713711
+    //     },
+    //     title: '2182-2306 Hayward St Parking',
+    //     address: '2182-2306 Hayward St, Ann Arbor, MI 48109',
+    //     capacity: 30,
+    //     img: '/images/2182-2306 Hayward St Parking.png',
+    //     layout: {
+    //         parkSize: {length: 600, width: 400},
+    //         slotSize: {length: 100, width: 50},
+    //         slots: [
+    //             {x: 10, y: 0, occupied: true},
+    //             {x: 60, y: 0, occupied: false},
+    //             {coord: [110,0], occupied: false},
+    //             {coord: [160,0], occupied: false},
+    //             {coord: [210,0], occupied: false},
+    //             {coord: [260,0], occupied: false},
+    //             {x: 10, y: 150, occupied: false},
+    //             {x: 60, y: 150, occupied: false},
+    //             {coord: [110,150], occupied: false},
+    //             {coord: [160,150], occupied: false},
+    //             {coord: [210,150], occupied: true},
+    //             {coord: [260,150], occupied: false},
+    //             {x: 10, y: 250, occupied: false},
+    //             {x: 60, y: 250, occupied: false},
+    //             {coord: [110,250], occupied: false},
+    //             {coord: [160,250], occupied: false},
+    //             {coord: [210,250], occupied: false},
+    //             {coord: [260,250], occupied: false},
+    //             {x: 10, y: 400, occupied: false},
+    //             {x: 60, y: 400, occupied: false},
+    //             {coord: [110,400], occupied: false},
+    //             {coord: [160,400], occupied: false},
+    //             {coord: [210,400], occupied: false},
+    //             {coord: [260,400], occupied: false},
+    //         ],
+    //         dash: [
+    //             [10,250,'x',260]
+    //         ]
+    //     }
+    // },
 
     {
         position: {
@@ -52,7 +52,7 @@ const ParkingLotsDB = [
         address: '1290 Murfin Ave, Ann Arbor, MI 48109',
         capacity: 232,
         vacant: 10,
-        img: '/public/images/1290 Murfin Ave Parking.png',
+        img: '/images/1290 Murfin Ave Parking.png',
         layout: {
             parkSize: { width: 1600, height: 900 },
             slotSize: { width: 30, height: 80 },

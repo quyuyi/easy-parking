@@ -12,7 +12,7 @@ class HarpMap extends Component {
     componentDidMount() {
         this.mapView = new MapView({
             canvas: this.map,
-            theme: '/public/javascripts/resources/berlin_tilezen_base_globe.json',
+            theme: 'javascripts/resources/berlin_tilezen_base_globe.json',
             maxVisibleDataSourceTiles: 40,
             tileCacheSize: 100
         });

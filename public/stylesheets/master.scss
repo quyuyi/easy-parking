@@ -38,6 +38,8 @@ html, body {
     width: 100vw;
     height: 100vh;
     position: absolute;
+    top: 0;
+    left: 0;
     background-color: rgba(255, 255, 255, 0.6);
 }
 .center-padding {
@@ -178,6 +180,9 @@ form {
     }
 }
 
+.view-container {
+    z-index: 2000;
+}
 #parking-lot-view {
     position: absolute;
     top: 50%;
@@ -189,6 +194,20 @@ form {
 #parking-lot-view[resize] {
     width: 70vw;
     height: calc(70vw * 9 / 16);
+}
+.close-view-btn {
+    position: absolute;
+    top: 20px;
+    right: 50px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background-color: transparent;
+    transition: all 1s ease 0s;
+    &:hover {
+        background-color: #e5e5e5;
+        transform: rotate(90deg);
+    }
 }
 
 @media only screen and (max-height: 736px) {

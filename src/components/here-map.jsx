@@ -5,16 +5,17 @@ import 'here-js-api/scripts/mapsjs-ui';
 import 'here-js-api/scripts/mapsjs-mapevents';
 import 'here-js-api/styles/mapsjs-ui.css';
 import InfoCard from './info-card';
+import View from './view';
 
 import anime from 'animejs';
 const _ = require('lodash');
-const DB = require('../db');
 
 class HereMap extends Component {
     constructor(props) {
         super(props);
         this.state = {
             showInfoCard: false,
+            showParkingLot: false,
             pl: {}
         };
         this.parkingLots = []; // each element is an object with six fields (position, title, address, capacity, vacant, img)
@@ -63,12 +64,12 @@ class HereMap extends Component {
             this.map.setCenter(destination.position)
                 .setZoom(this.props.altitude);
             this.markCurrentLocation().markDestination();
-            this.searchParkingLots().markParkingLots();
+            this.searchParkingLots();
         }
         else if (altitude !== prevProps.altitude) {
             this.map.setZoom(this.props.altitude);
             this.redrawBubbles();
-            this.searchParkingLots().markParkingLots();
+            this.searchParkingLots();
         }
     }
 
@@ -89,6 +90,11 @@ class HereMap extends Component {
                     dist={this.props.dist}
                     colorMapping={this.colorMapping}
                     handleCloseButton={this.handleCloseButton}
+                    handleViewParkingLot={this.handleViewParkingLot}
+                />}
+                {this.state.showParkingLot && <View
+                    pl={this.state.pl}
+                    handleCloseButton={this.handleCloseView}
                 />}
             </Fragment>
         );
@@ -167,20 +173,26 @@ class HereMap extends Component {
         return this;
     };
 
-    searchParkingLots = () => {
+    searchParkingLots = async () => {
         const { dist, destination, currentLocation } = this.props;
         const maxDistance = this.reverseMapping[this.props.altitude];
         this.parkingLots = [];
+        const res = await fetch('/db', {
+            method: 'GET'
+        });
+        if (!res.ok) alert('Can\'t hear from the back end');
+        const DB = await res.json();
+        console.log(DB);
         let i = 0;
-        DB.forEach(pl => {
+        DB.data.forEach(pl => {
             if (dist(pl.position, destination.position) * 1000 > maxDistance)
                 return;
             this.parkingLots.push(pl);
-            this.parkingLots[i].vacant = Math.floor(Math.random() * pl.capacity);
             this.parkingLots[i].distanceFromYou = dist(pl.position, currentLocation).toFixed(2) + ' km';
             this.parkingLots[i].distanceFromDest = Math.floor(dist(pl.position, destination.position) * 1000) + ' m';
             i++;
         });
+        this.markParkingLots();
         return this;
     };
 
@@ -299,6 +311,16 @@ class HereMap extends Component {
 
     handleCloseButton = () => {
         this.setState({ showInfoCard: false });
+        return this;
+    };
+
+    handleViewParkingLot = () => {
+        this.setState({ showParkingLot: true });
+        return this;
+    };
+
+    handleCloseView = () => {
+        this.setState({ showParkingLot: false });
         return this;
     };
 }

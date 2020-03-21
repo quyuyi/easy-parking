@@ -63,7 +63,8 @@ class InfoCard extends Component {
                             </Button>
                         </div>
                     </div>
-                    <Button variant='primary' className='info-btn'>
+                    <Button variant='primary' className='info-btn'
+                        onClick={this.props.handleViewParkingLot}>
                         View Parking Slots
                     </Button>
                 </div>
