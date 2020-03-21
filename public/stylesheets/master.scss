@@ -178,13 +178,17 @@ form {
     }
 }
 
-#my-canvas {
+#parking-lot-view {
     position: absolute;
-    width: 70vw;
-    height: calc(70vw * 9 / 16);
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    background-color: #e5e5e5;
+    border: 2px solid #000000;
+}
+#parking-lot-view[resize] {
+    width: 70vw;
+    height: calc(70vw * 9 / 16);
 }
 
 @media only screen and (max-height: 736px) {
@@ -198,12 +202,8 @@ form {
         transform: translateX(15px);
     }
 
-    #my-canvas {
+    #parking-lot-view[resize] {
         width: 100vw;
         height: calc(100vw * 9 / 16);
     }
-}
-
-#ban {
-    display: none;
 }
