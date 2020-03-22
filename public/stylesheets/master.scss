@@ -210,6 +210,35 @@ form {
     }
 }
 
+.dialog-box {
+    width: 40vw;
+    height: calc(40vw * 9 / 16);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 25px;
+    background-color: #f7f7f7;
+    border: 0;
+    border-radius: 15px;
+    box-shadow: 6px 6px 6px rgba(0, 0, 0, 0.25);
+    h4 {
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 25px;
+    }
+    .my-btn-group {
+        width: calc(100% - 2 * 25px);
+        position: absolute;
+        left: 25px;
+        bottom: 25px;
+        button {
+            width: 30%;
+            margin-left: 25px;
+        }
+    }
+}
+
 @media only screen and (max-height: 736px) {
     #title {
         margin-bottom: 15px;
@@ -224,6 +253,22 @@ form {
     #parking-lot-view[resize] {
         width: 100vw;
         height: calc(100vw * 9 / 16);
+        max-height: 100vh;
+    }
+
+    .dialog-box {
+        width: 70vw;
+        height: calc(70vw * 9 / 16);
+        max-height: 100vh;
+        padding: 15px;
+        h4 {
+            margin-bottom: 15px;
+        }
+        .my-btn-group {
+            width: calc(100% - 2 * 15px);
+            left: 15px;
+            bottom: 15px;
+        }
     }
 }
 

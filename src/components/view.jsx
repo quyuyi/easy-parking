@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Dialog from './dialog';
 
 import { paper } from 'paper';
 import anime from 'animejs';
@@ -9,6 +10,11 @@ class View extends Component {
     constructor(props) {
         super(props);
         this.items = [];
+        this.state = {
+            showDialogBox: false,
+            dialogProperty: {},
+            data: {}
+        };
     }
 
     componentDidMount() {
@@ -43,6 +49,11 @@ class View extends Component {
                     id='parking-lot-view'
                     resize='true'>
                 </canvas>
+                {this.state.showDialogBox && <Dialog
+                    data={this.state.data}
+                    property={this.state.dialogProperty}
+                    handleCloseDialog={this.handleCloseDialog}
+                />}
                 <div className='hidden'>
                     <img id='occupied' src='/images/occupied.png'></img>
                     <img id='vacant' src='/images/vacant.png'></img>
@@ -62,6 +73,11 @@ class View extends Component {
             duration: 1500
         }).finished;
         this.props.handleCloseButton();
+        return this;
+    };
+
+    handleCloseDialog = () => {
+        this.setState({ showDialogBox: false, dialogProperty: {} });
         return this;
     };
 
@@ -97,7 +113,7 @@ class View extends Component {
             this.drawFill(x, y, w, h, ps.orient),
             this.drawSign(x, y, w, h, ps.orient, ps.state)
         ]);
-        g.data = this.props.pl;
+        g.data = { pl: this.props.pl, ps: ps };
         g.onMouseEnter = function(e) {
             document.getElementById('parking-lot-view').style.cursor = 'pointer';
             this.children[1].selected = true;
@@ -106,8 +122,40 @@ class View extends Component {
             document.getElementById('parking-lot-view').style.cursor = 'default';
             this.children[1].selected = false;
         };
-        g.onClick = function(e) {
-            console.log(this.data);
+        g.onClick = e => {
+            console.log(e.target.data);
+            let property = {
+                text: '',
+                buttons: []
+            };
+            switch (e.target.data.ps.state) {
+                case 'occupied':
+                    property.text = 'This slot has already been occupied.';
+                    property.buttons.push('OK');
+                    break;
+
+                case 'vacant':
+                    property.text = 'Do you want to book this slot?';
+                    property.buttons.push('Yes');
+                    property.buttons.push('Cancel');
+                    break;
+
+                case 'accessible':
+                    property.text = 'This slot is reserved for accessibility only. Do you still want to book this slot?';
+                    property.buttons.push('Yes');
+                    property.buttons.push('Cancel');
+                    break;
+
+                case 'banned':
+                    property.text = 'This is not a slot.';
+                    property.buttons.push('OK');
+                    break;
+            }
+            this.setState({
+                showDialogBox: true,
+                dialogProperty: property,
+                data: this.data
+            });
         };
         this.items.push(g);
         return this;
