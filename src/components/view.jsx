@@ -154,7 +154,7 @@ class View extends Component {
             this.setState({
                 showDialogBox: true,
                 dialogProperty: property,
-                data: this.data
+                data: e.target.data
             });
         };
         this.items.push(g);
