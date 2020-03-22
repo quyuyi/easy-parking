@@ -113,7 +113,7 @@ class View extends Component {
             this.drawFill(x, y, w, h, ps.orient),
             this.drawSign(x, y, w, h, ps.orient, ps.state)
         ]);
-        g.data = { pl: this.props.pl, ps: i };
+        g.data = { pl: this.props.pl, ps: ps, i: i };
         g.onMouseEnter = function(e) {
             document.getElementById('parking-lot-view').style.cursor = 'pointer';
             this.children[1].selected = true;
