@@ -17,3 +17,8 @@ b. write html for each parkling lot
 5. backend database
 a. for parking slots occupy/unoccupy
 b. for html canvas
+
+fill in db
+upon receive success message, auto update
+race
+make occupied vacant

@@ -18,9 +18,18 @@ router.get('/db', function(req, res, next) {
 });
 
 /* api for book slot */
-router.post('/api/book', function(req, res, next) {
+router.post('/api/book', async function(req, res, next) {
     console.log(req.body);
-
+    let doc = await new Promise(resolve => {
+        db.find({ _id: req.body.id}, function(err, docs) {
+            resolve(docs[0]);
+        });
+    });
+    doc.layout.slots[req.body.i].state = "occupied";
+    db.update({_id: req.body.id}, { $set: { layout: doc.layout, vacant: doc.vacant-1 } }, {}, function(err, numReplaced){
+        console.log(numReplaced);
+    });
+    res.json({message: "success"});
 });
 
 module.exports = router;
