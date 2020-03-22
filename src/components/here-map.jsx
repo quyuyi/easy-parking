@@ -158,7 +158,6 @@ class HereMap extends Component {
         // redraw parking lots bubble
         this.markers.plMarkers.forEach(pl => {
             tmp = pl.getData();
-            console.log(tmp);
             const bubble = new H.ui.InfoBubble({
                 lat: tmp.position.lat + this.approxRegression(zoomLevel),
                 lng: tmp.position.lng

@@ -26,6 +26,8 @@ class View extends Component {
 
     componentWillUnmount() {
         window.removeEventListener('resize', this.resize);
+        paper.remove();
+        paper.clear();
     }
 
     render() {
