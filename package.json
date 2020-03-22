@@ -43,6 +43,7 @@
     "jquery": "^3.4.1",
     "lodash": "^4.17.15",
     "morgan": "^1.10.0",
+    "nedb": "^1.8.0",
     "paper": "^0.12.4",
     "react": "^16.13.0",
     "react-bootstrap": "^1.0.0-beta.17",
