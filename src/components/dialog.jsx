@@ -64,6 +64,20 @@ class Dialog extends Component {
         e.target.disabled = true;
         const { data } = this.props;
         // send request
+        const res = await fetch('/api/book', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: data.pl._id,
+                x: data.ps.x,
+                y: data.ps.y
+            })
+        });
+        if (!res.ok) console.warn('Can\'t hear from /api/book');
+        const message = await res.json();
+        console.log(message);
         return await this.handleCloseDialog();
     };
 
