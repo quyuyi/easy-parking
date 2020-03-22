@@ -99,21 +99,21 @@ class View extends Component {
         const { pl } = this.props;
         const [widthRatio, heightRatio] = [this.width / pl.layout.parkSize.width, this.height / pl.layout.parkSize.height];
         const [w, h] = [pl.layout.slotSize.width * widthRatio, pl.layout.slotSize.height * heightRatio]; // already scaled
-        pl.layout.slots.forEach(ps => {
-            this.drawParkingSlot(ps, w, h, widthRatio, heightRatio);
+        pl.layout.slots.forEach((ps, i) => {
+            this.drawParkingSlot(ps, i, w, h, widthRatio, heightRatio);
         });
         paper.view.draw();
         return this;
     };
 
-    drawParkingSlot = (ps, w, h, wr, hr) => {
+    drawParkingSlot = (ps, i, w, h, wr, hr) => {
         const [x, y] = [ps.x * wr, ps.y * hr];
         let g = new Group([
             this.drawContour(x, y, w, h, ps.orient),
             this.drawFill(x, y, w, h, ps.orient),
             this.drawSign(x, y, w, h, ps.orient, ps.state)
         ]);
-        g.data = { pl: this.props.pl, ps: ps };
+        g.data = { pl: this.props.pl, ps: i };
         g.onMouseEnter = function(e) {
             document.getElementById('parking-lot-view').style.cursor = 'pointer';
             this.children[1].selected = true;

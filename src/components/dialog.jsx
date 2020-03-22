@@ -71,8 +71,7 @@ class Dialog extends Component {
             },
             body: JSON.stringify({
                 id: data.pl._id,
-                x: data.ps.x,
-                y: data.ps.y
+                i: data.ps
             })
         });
         if (!res.ok) console.warn('Can\'t hear from /api/book');
