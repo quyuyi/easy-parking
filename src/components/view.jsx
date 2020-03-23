@@ -24,6 +24,8 @@ class View extends Component {
             opacity: [0, 1],
             easing: 'easeOutQuad',
             duration: 1500
+        }).finished.then(() => {
+            this['☸'] = document.querySelector('.easy-parking').removeChild(document.getElementById('☸'));
         });
         paper.setup(this.canvas);
         this.resize();
@@ -31,6 +33,7 @@ class View extends Component {
     }
 
     componentWillUnmount() {
+        document.querySelector('.easy-parking').append(this['☸']);
         window.removeEventListener('resize', this.resize);
         paper.remove();
         paper.clear();

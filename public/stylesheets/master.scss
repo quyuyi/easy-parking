@@ -213,6 +213,8 @@ form {
 .dialog-box {
     width: 40vw;
     height: calc(40vw * 9 / 16);
+    max-width: 396px;
+    max-height: 222.75px;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -225,7 +227,11 @@ form {
     h4 {
         font-weight: bold;
         text-align: center;
-        margin-bottom: 25px;
+        margin-bottom: 5px;
+    }
+    hr {
+        margin-top: 0;
+        margin-bottom: 20px;
     }
     .my-btn-group {
         width: calc(100% - 2 * 25px);
@@ -233,7 +239,7 @@ form {
         left: 25px;
         bottom: 25px;
         button {
-            width: 30%;
+            min-width: 30%;
             margin-left: 25px;
         }
     }
@@ -261,8 +267,8 @@ form {
         height: calc(70vw * 9 / 16);
         max-height: 100vh;
         padding: 15px;
-        h4 {
-            margin-bottom: 15px;
+        hr {
+            margin-bottom: 10px;
         }
         .my-btn-group {
             width: calc(100% - 2 * 15px);

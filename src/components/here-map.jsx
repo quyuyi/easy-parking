@@ -179,7 +179,7 @@ class HereMap extends Component {
         const res = await fetch('/db', {
             method: 'GET'
         });
-        if (!res.ok) alert('Can\'t hear from the back end');
+        if (!res.ok) console.warn('Can\'t hear from /db');
         const DB = await res.json();
         console.log(DB);
         let i = 0;
