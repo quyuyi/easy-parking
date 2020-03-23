@@ -56,6 +56,7 @@ class View extends Component {
                     data={this.state.data}
                     property={this.state.dialogProperty}
                     handleCloseDialog={this.handleCloseDialog}
+                    updateView={this.updateView}
                 />}
                 <div className='hidden'>
                     <img id='occupied' src='/images/occupied.png'></img>
@@ -81,6 +82,12 @@ class View extends Component {
 
     handleCloseDialog = () => {
         this.setState({ showDialogBox: false, dialogProperty: {} });
+        return this;
+    };
+
+    updateView = async () => {
+        await this.props.updateView();
+        this.draw();
         return this;
     };
 

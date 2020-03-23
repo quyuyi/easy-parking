@@ -55,41 +55,40 @@ class Dialog extends Component {
     };
 
     renderButtons = (b, i) => {
+        let v, handler;
         switch (b) {
             case 'OK':
-                return (
-                    <Button key={i} variant='success' onClick={this.handleOK}>
-                        {b}
-                    </Button>
-                );
+                v = 'success';
+                handler = this.handleOK;
+                break;
 
             case 'Yes':
-                return (
-                    <Button key={i} variant='success' onClick={this.handleYes}>
-                        {b}
-                    </Button>
-                );
+                v = 'success';
+                handler = this.handleYes;
+                break;
 
             case 'Cancel':
-                return (
-                    <Button key={i} variant='secondary' onClick={this.handleCancel}>
-                        {b}
-                    </Button>
-                );
+                v = 'secondary';
+                handler = this.handleCancel;
+                break;
 
             case 'Try Another One':
-                return (
-                    <Button key={i} variant='danger' onClick={this.handleOK}>
-                        {b}
-                    </Button>
-                );
+                v = 'danger';
+                handler = this.handleOK;
+                break;
         }
+        return (
+            <Button key={i} variant={v} onClick={handler}>
+                {b}
+            </Button>
+        );
     };
 
     handleOK = async e => {
         e.target.disabled = true;
         e.target.style.cursor = 'wait';
-        return await this.handleCloseDialog({...e});
+        !this.state.requestChoice && this.props.updateView();
+        return await this.handleCloseDialog();
     };
 
     handleYes = async e => {
@@ -113,19 +112,16 @@ class Dialog extends Component {
 
     handleCancel = async e => {
         e.target.disabled = true;
-        e.target.style.cursor = 'wait';
-        return await this.handleCloseDialog({...e});
+        return await this.handleCloseDialog();
     };
 
-    handleCloseDialog = async e => {
+    handleCloseDialog = async () => {
         await anime({
             targets: '.dialog-box',
             opacity: [1, 0],
             easing: 'easeOutQuad',
             duration: 600
         }).finished;
-        e.target.disabled = false;
-        e.target.style.cursor = 'default';
         this.props.handleCloseDialog();
         return Promise.resolve(this);
     };

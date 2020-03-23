@@ -16,7 +16,8 @@ class HereMap extends Component {
         this.state = {
             showInfoCard: false,
             showParkingLot: false,
-            pl: {}
+            pl: {},
+            i: 0
         };
         this.parkingLots = []; // each element is an object with six fields (position, title, address, capacity, vacant, img)
         this.markers = {
@@ -95,6 +96,7 @@ class HereMap extends Component {
                 {this.state.showParkingLot && <View
                     pl={this.state.pl}
                     handleCloseButton={this.handleCloseView}
+                    updateView={this.searchParkingLots}
                 />}
             </Fragment>
         );
@@ -191,7 +193,12 @@ class HereMap extends Component {
             this.parkingLots[i].distanceFromDest = Math.floor(dist(pl.position, destination.position) * 1000) + ' m';
             i++;
         });
-        this.markParkingLots();
+        if (this.state.showInfoCard) {
+            this.markParkingLots(this.map.getZoom());
+            const j = this.state.i;
+            this.setState({ pl: this.parkingLots[j] });
+        }
+        else this.markParkingLots();
         return this;
     };
 
@@ -301,7 +308,8 @@ class HereMap extends Component {
                 this.redrawBubbles();
                 this.setState({
                     showInfoCard: true,
-                    pl: pl
+                    pl: pl,
+                    i: i
                 });
             });
         });

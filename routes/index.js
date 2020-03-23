@@ -26,22 +26,22 @@ router.post('/api/book', async function(req, res, next) {
             resolve(docs[0]);
         });
     }).catch(err => console.log(err));
-    const { message, status } = await new Promise((resolve, reject) => {
+    const message = await new Promise((resolve, reject) => {
         if (doc.layout.slots[req.body.i].state === 'occupied')
             resolve({
-                message: 'Oops, you\'re too late! This slot has already been booked by others.',
+                message: 'Oops, you are too late! This slot has already been booked by others.',
                 status: false
             });
         doc.layout.slots[req.body.i].state = "occupied";
         db.update({ _id: req.body.id }, { $set: { layout: doc.layout, vacant: doc.vacant - 1 } }, {}, function(err, numReplaced){
             if (err) reject(err);
             resolve({
-                message: 'You\'re all set!',
+                message: 'You are all set!',
                 status: true
             });
         });
     }).catch(err => console.log(err));
-    res.json({ message: message, status: status });
+    res.json(message);
 });
 
 module.exports = router;
