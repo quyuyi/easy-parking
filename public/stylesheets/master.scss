@@ -274,6 +274,9 @@ form {
             width: calc(100% - 2 * 15px);
             left: 15px;
             bottom: 15px;
+            button {
+                margin-left: 15px;
+            }
         }
     }
 }
