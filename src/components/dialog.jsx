@@ -47,8 +47,7 @@ class Dialog extends Component {
                 <Fragment>
                     <p>{this.state.res.message}</p>
                     <div className='my-btn-group' align='right'>
-                        {this.state.res.status && this.renderButtons('OK', 2)}
-                        {!this.state.res.status && this.renderButtons('Try Another One', 2)}
+                        {this.renderResponse()}
                     </div>
                 </Fragment>
             );
@@ -84,6 +83,16 @@ class Dialog extends Component {
         );
     };
 
+    renderResponse = () => {
+        switch (this.state.res.status) {
+            case 'race':
+                return this.renderButtons('Try Another One', 2);
+
+            default:
+                return this.renderButtons('OK', 2);
+        }
+    };
+
     handleOK = async e => {
         e.target.disabled = true;
         e.target.style.cursor = 'wait';
@@ -95,7 +104,8 @@ class Dialog extends Component {
         e.target.disabled = true;
         e.target.style.cursor = 'wait';
         const { data } = this.props;
-        const res = await fetch('/api/book', {
+        const endpoint = data.ps.state === 'car' ? '/api/checkout' : '/api/book';
+        const res = await fetch(endpoint, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -105,7 +115,10 @@ class Dialog extends Component {
                 i: data.i
             })
         });
-        if (!res.ok) console.warn('Can\'t hear from /api/book');
+        if (!res.ok) {
+            console.warn(`Can\'t hear from ${endpoint}`);
+            return;
+        }
         const message = await res.json();
         this.setState({ requestChoice: false, res: message });
     };

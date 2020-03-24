@@ -63,6 +63,7 @@ class View extends Component {
                     <img id='vacant' src='/images/vacant.png'></img>
                     <img id='banned' src='/images/banned.png'></img>
                     <img id='accessible' src='/images/accessible.png'></img>
+                    <img id='car' src='/images/car.png'></img>
                 </div>
             </div>
         );
@@ -152,6 +153,12 @@ class View extends Component {
 
                 case 'accessible':
                     property.text = 'This slot is reserved for accessibility only. Do you still want to book this slot?';
+                    property.buttons.push('Yes');
+                    property.buttons.push('Cancel');
+                    break;
+
+                case 'car':
+                    property.text = 'You booked this slot. Do you want to checkout?';
                     property.buttons.push('Yes');
                     property.buttons.push('Cancel');
                     break;
