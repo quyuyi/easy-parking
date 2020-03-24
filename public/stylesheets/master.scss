@@ -20,9 +20,15 @@ html, body {
 }
 #subtitle {
     font-size: 1.2rem;
+    margin-bottom: 20px;
 }
 #preface-dialog {
+    width: 100%;
     opacity: 0;
+    position: absolute;
+    left: 50%;
+    bottom: 30vh;
+    transform: translateX(-50%);
 }
 #app {
     opacity: 0;
@@ -49,10 +55,6 @@ html, body {
 .customized-btn {
     width: 160px;
     height: 50px;
-    position: absolute;
-    left: 50%;
-    bottom: 30vh;
-    transform: translateX(-50%);
     color: white;
     background-color: black;
     border: 0;
@@ -248,6 +250,9 @@ form {
 @media only screen and (max-height: 736px) {
     #title {
         margin-bottom: 15px;
+    }
+    #subtitle {
+        font-size: 1rem;
     }
 }
 
