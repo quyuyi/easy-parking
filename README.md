@@ -1,24 +1,17 @@
-# TODO
-1. set mark layer (z index doesn't work)
-2. parking lot card information show: *design*
-a. address
-b. # total slots
-c. # empty slots
-d. distance(parking lot, destination)
-e. distance(parking lot, current location)
-3. view parking lot: on click -> load the top-view layout of the parking out
-a. mark occupied -> using banning sign
-b. mark unoccupied slots
-c. mark blue/gold permission
-d. mark disable permission
-4. 2 options to implement the parking lot
-a. draw pictures and identify coordinates *html canvas*
-b. write html for each parkling lot
-5. backend database
-a. for parking slots occupy/unoccupy
-b. for html canvas
+# Easy Parking
+A tool to help you find your parking slot.
 
-fill in db
-upon receive success message, auto update
-race
-make occupied vacant
+### Frameworks Used
+- React
+- Bootstrap
+- Express
+- Node.js
+- Webpack
+
+### How To Run
+1. If you haven't installed `node.js`, go to `node.js`'s official website to download the installation package.
+2. Run `npm install .` to install all the necessary packages.
+3. Populate the database: Run `npm run migration`. If you see any errors, just ignore them.
+4. Run `npm run start` to start the application.
+5. Go to `localhost:3000` to access the application.
+6. Enjoy.

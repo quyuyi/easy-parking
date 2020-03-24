@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "build": "webpack --config webpack.config.js",
+    "migration": "rm database.db booking.db; node ./migration.js",
     "start": "node ./bin/www"
   },
   "author": "Junyi Cheng <rexcheng@umich.edu>",

@@ -71,7 +71,7 @@ router.post('/api/book', async function(req, res, next) {
                     message: 'Oops, you are too late! This slot has already been booked by others.',
                     status: 'race'
                 });
-            doc.layout.slots[req.body.i].state = "occupied";
+            doc.layout.slots[req.body.i].state = 'occupied';
             db.update({ _id: req.body.id }, { $set: { layout: doc.layout, vacant: doc.vacant - 1 } }, {}, function(err, numReplaced) {
                 if (err) reject(err);
                 if (numReplaced === 0) reject(new Error('No entry in the database was updated.'));
@@ -110,7 +110,7 @@ router.post('/api/checkout', async function(req, res, next) {
             });
         });
         const message = await new Promise((resolve, reject) => {
-            doc.layout.slots[req.body.i].state = 'vacant';
+            doc.layout.slots[req.body.i].state = doc.layout.slots[req.body.i].property;
             db.update({ _id: req.body.id }, { $set: { layout: doc.layout, vacant: doc.vacant + 1 } }, {}, function(err, numReplaced) {
                 if (err) reject(err);
                 if (numReplaced === 0) reject(new Error('Something went wrong for checkout.'));
