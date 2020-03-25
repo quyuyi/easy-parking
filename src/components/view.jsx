@@ -244,6 +244,7 @@ class View extends Component {
 
             default: // left / right
                 sign.position = [x + h / 2, y + w / 2];
+                if (state === 'banned') sign.rotate(90);
         }
         sign.scale(w / 100);
         return sign;
