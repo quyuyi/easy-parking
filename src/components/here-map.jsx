@@ -30,7 +30,7 @@ class HereMap extends Component {
             18: 100,
             17: 200,
             16: 500,
-            14: 1000
+            15: 1000
         };
     }
 
