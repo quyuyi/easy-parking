@@ -53,10 +53,7 @@ class HereMap extends Component {
         this.behavior.disable(H.mapevents.Behavior.Feature.WHEEL_ZOOM | H.mapevents.Behavior.Feature.DBL_TAP_ZOOM);
         this.markCurrentLocation();
         window.addEventListener('resize', this.resizeMap);
-        document.querySelectorAll('.H_zoom .H_btn.H_el').forEach(e => {
-            e.addEventListener('click', this.redrawBubbles);
-        });
-
+        this.ui.getControl('zoom').getElement().addEventListener('click', this.redrawBubbles);
     }
 
     componentDidUpdate(prevProps) {
@@ -76,9 +73,7 @@ class HereMap extends Component {
 
     componentWillUnmount() {
         window.removeEventListener('resize', this.resizeMap);
-        document.querySelectorAll('.H_zoom .H_btn.H_el').forEach(e => {
-            e.removeEventListener('click', this.redrawBubbles);
-        });
+        this.ui.getControl('zoom').getElement().removeEventListener('click', this.redrawBubbles);
         this.map.getObjects().forEach(obj => obj.dispose());
     }
 
@@ -178,6 +173,8 @@ class HereMap extends Component {
         const { dist, destination, currentLocation } = this.props;
         const maxDistance = this.reverseMapping[this.props.altitude];
         this.parkingLots = [];
+        if (this.state.showInfoCard)
+            document.querySelector('.info-card .close-btn').click();
         const res = await fetch('/db', {
             method: 'GET'
         });
@@ -193,12 +190,9 @@ class HereMap extends Component {
             this.parkingLots[i].distanceFromDest = Math.floor(dist(pl.position, destination.position) * 1000) + ' m';
             i++;
         });
-        if (this.state.showInfoCard) {
-            this.markParkingLots(this.map.getZoom());
-            const j = this.state.i;
-            this.setState({ pl: this.parkingLots[j] });
-        }
-        else this.markParkingLots();
+        this.markParkingLots(this.map.getZoom());
+        if (this.parkingLots.length === 0)
+            alert('Sorry, no matched parking lots with vacant slots found!')
         return this;
     };
 
@@ -274,7 +268,6 @@ class HereMap extends Component {
         this.bubbles.plBubbles.forEach(b => this.ui.removeBubble(b));
         this.markers.plMarkers = [];
         this.bubbles.plBubbles = [];
-        // this.parkingLots.length === 0 && alert('Sorry, no parking lots with vacant slots found.');
         this.parkingLots.forEach((pl, i) => {
             const color = this.colorMapping(pl.vacant);
             const marker = new H.map.Marker(pl.position, {
