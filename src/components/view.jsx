@@ -87,7 +87,7 @@ class View extends Component {
     };
 
     updateView = async () => {
-        await this.props.updateView();
+        await this.props.updateView(true);
         this.draw();
         return this;
     };

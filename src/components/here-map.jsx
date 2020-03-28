@@ -169,11 +169,11 @@ class HereMap extends Component {
         return this;
     };
 
-    searchParkingLots = async () => {
+    searchParkingLots = async (forceUpdate = false) => {
         const { dist, destination, currentLocation } = this.props;
         const maxDistance = this.reverseMapping[this.props.altitude];
         this.parkingLots = [];
-        if (this.state.showInfoCard)
+        if (this.state.showInfoCard && !forceUpdate)
             document.querySelector('.info-card .close-btn').click();
         const res = await fetch('/db', {
             method: 'GET'
@@ -191,8 +191,12 @@ class HereMap extends Component {
             i++;
         });
         this.markParkingLots(this.map.getZoom());
+        if (forceUpdate) {
+            const j = this.state.i;
+            this.setState({ pl: this.parkingLots[j] });
+        }
         if (this.parkingLots.length === 0)
-            alert('Sorry, no matched parking lots with vacant slots found!')
+            alert('Sorry, no matched parking lots with vacant slots found!');
         return this;
     };
 
