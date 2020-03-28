@@ -62,6 +62,7 @@ class InfoCard extends Component {
                                 Vacant <Badge variant='light'>{pl.vacant}</Badge>
                             </Button>
                         </div>
+                        {this.renderRoutingInfo()}
                     </div>
                     <Button variant='primary' className='info-btn'
                         onClick={this.props.handleViewParkingLot}>
@@ -97,6 +98,57 @@ class InfoCard extends Component {
         this.props.handleCloseButton();
         return this;
     };
+
+    renderRoutingInfo = () => {
+        const { routeData } = this.props;
+        if (Object.keys(routeData).length > 0) return (
+            <div className='routing-container'>
+                <div className='heading'>
+                    <h6>From you to parking lot</h6>
+                    <Button variant='info' size='sm'
+                        onClick={() => this.props.drawRoute(routeData.yp, 'rgba(59, 99, 243, 0.7)')}>
+                        View Route
+                    </Button>
+                </div>
+                <hr/>
+                <small>Estimated driving time: {routeData.yp.summary.travelTime.format()}</small>
+                <ol className='directions'>
+                    {routeData.yp.leg[0].maneuver.map((m, i) =>
+                        this.renderInstruction(m, i)
+                    )}
+                </ol>
+                <div className='heading'>
+                    <h6>From parking lot to destination</h6>
+                    <Button variant='info' size='sm'
+                        onClick={() => this.props.drawRoute(routeData.pd, 'rgba(243, 59, 158, 0.7)')}>
+                        View Route
+                    </Button>
+                </div>
+                <hr/>
+                <small>Estimated walking time: {routeData.pd.summary.travelTime.format()}</small>
+                <ol className='directions'>
+                    {routeData.pd.leg[0].maneuver.map((m, i) =>
+                        this.renderInstruction(m, i)
+                    )}
+                </ol>
+            </div>
+        );
+    };
+
+    renderInstruction = (m, i) => {
+        return (
+            <li key={i}>
+                <span className={'arrow ' + m.action} />
+                <span dangerouslySetInnerHTML={{ __html: m.instruction }} />
+            </li>
+        );
+    };
 }
+
+Number.prototype.format = function () {
+    if (Math.floor(this / 60) > 0)
+        return `${Math.floor(this / 60)} minutes ${this % 60} seconds`;
+    return `${this} seconds`;
+};
 
 export default InfoCard;

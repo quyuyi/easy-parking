@@ -17,7 +17,8 @@ class HereMap extends Component {
             showInfoCard: false,
             showParkingLot: false,
             pl: {},
-            i: 0
+            i: 0,
+            routeData: {}
         };
         this.parkingLots = []; // each element is an object with six fields (position, title, address, capacity, vacant, img)
         this.markers = {
@@ -26,6 +27,8 @@ class HereMap extends Component {
         this.bubbles = {
             plBubbles: []
         };
+        this.target = {};
+        this.routes = [];
         this.reverseMapping = {
             18: 100,
             17: 200,
@@ -47,6 +50,7 @@ class HereMap extends Component {
                 center: this.props.currentLocation
             }
         );
+        this.router = this.platform.getRoutingService();
         this.ui = H.ui.UI.createDefault(this.map, defaultLayers);
         this.mapEvents = new H.mapevents.MapEvents(this.map);
         this.behavior = new H.mapevents.Behavior(this.mapEvents);
@@ -85,6 +89,8 @@ class HereMap extends Component {
                     pl={this.state.pl}
                     dist={this.props.dist}
                     colorMapping={this.colorMapping}
+                    routeData={this.state.routeData}
+                    drawRoute={this.drawRoute}
                     handleCloseButton={this.handleCloseButton}
                     handleViewParkingLot={this.handleViewParkingLot}
                 />}
@@ -121,6 +127,39 @@ class HereMap extends Component {
     clearBubble = b => {
         this.ui.removeBubble(this.bubbles[b]);
         this.bubbles[b] = undefined;
+        return this;
+    };
+
+    clearRoutes = () => {
+        this.routes.forEach(r => this.map.removeObject(r));
+        this.routes = [];
+        return this;
+    };
+
+    drawRoute = (route, color) => {
+        if (this.routes.length === 2) return;
+        let lineString = new H.geo.LineString();
+        route.shape.forEach(point => {
+            const parts = point.split(',');
+            lineString.pushLatLngAlt(parts[0], parts[1]);
+        });
+        const polyLine = new H.map.Polyline(lineString, {
+            style: {
+                lineWidth: 4,
+                strokeColor: color
+            }
+        });
+        this.routes.push(polyLine);
+        this.map.addObject(polyLine);
+        this.map.getViewModel().setLookAtData({
+            bounds: polyLine.getBoundingBox().mergeRect(H.geo.Rect.coverPoints([
+                { lat: route.waypoint[0].originalPosition.latitude - 0.001, lng: route.waypoint[0].originalPosition.longitude - 0.001 },
+                { lat: route.waypoint[1].originalPosition.latitude - 0.001, lng: route.waypoint[1].originalPosition.longitude - 0.001 },
+                { lat: route.waypoint[0].originalPosition.latitude + 0.001, lng: route.waypoint[0].originalPosition.longitude - 0.001 },
+                { lat: route.waypoint[1].originalPosition.latitude + 0.001, lng: route.waypoint[1].originalPosition.longitude - 0.001 }
+            ]))
+        });
+        this.redrawBubbles();
         return this;
     };
 
@@ -167,6 +206,38 @@ class HereMap extends Component {
         // close all the bubbles at the end
         this.ui.getBubbles().forEach(b => b.close());
         return this;
+    };
+
+    findRoutes = data => {
+        const { currentLocation, destination } = this.props;
+        Promise.all([
+            // driving route from you to parking lot
+            new Promise((resolve, reject) => {
+                this.router.calculateRoute({
+                    mode: 'fastest;car',
+                    representation: 'display',
+                    routeattributes : 'waypoints,summary,shape,legs',
+                    maneuverattributes: 'direction,action',
+                    waypoint0: `${currentLocation.lat},${currentLocation.lng}`,
+                    waypoint1: `${data.position.lat},${data.position.lng}`
+                }, result => resolve(result.response.route[0]), err => reject(err));
+            }),
+            // walking route from parking lot to destination
+            new Promise((resolve, reject) => {
+                this.router.calculateRoute({
+                    mode: 'shortest;pedestrian',
+                    representation: 'display',
+                    routeattributes : 'waypoints,summary,shape,legs',
+                    maneuverattributes: 'direction,action',
+                    waypoint0: `${data.position.lat},${data.position.lng}`,
+                    waypoint1: `${destination.position.lat},${destination.position.lng}`
+                }, result => resolve(result.response.route[0]), err => reject(err));
+            })
+        ]).then(res => {
+            const [routeYP, routePD] = res;
+            console.log(routeYP, routePD);
+            this.setState({ routeData: { yp: routeYP, pd: routePD } });
+        }).catch(err => console.warn(err));
     };
 
     searchParkingLots = async (forceUpdate = false) => {
@@ -300,12 +371,22 @@ class HereMap extends Component {
                 this.bubbles.plBubbles[i].close();
                 document.getElementById('here-map').style.cursor = 'default';
             });
-            this.markers.plMarkers[i].addEventListener('pointerup', e => {
-                this.map.setCenter(e.target.getGeometry()).setZoom(17);
+            this.markers.plMarkers[i].addEventListener('pointerup', async e => {
+                const data = e.target.getData();
+                const pos = e.target.getGeometry();
+                this.map.setCenter(pos).setZoom(17);
+                if (_.isEqual(pos, this.target)) {
+                    this.redrawBubbles();
+                    this.setState({ showInfoCard: true });
+                    return;
+                }
+                this.target = pos;
+                this.clearRoutes();
+                this.findRoutes(data);
                 this.redrawBubbles();
                 this.setState({
                     showInfoCard: true,
-                    pl: pl,
+                    pl: data,
                     i: i
                 });
             });

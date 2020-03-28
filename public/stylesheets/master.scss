@@ -155,7 +155,11 @@ form {
         }
         .info-container {
             width: 100%;
+            height: 370px;
+            max-height: 50vh;
             padding: 10px 20px;
+            position: relative;
+            overflow-y: scroll;
             div {
                 margin-bottom: 35px;
             }
@@ -179,7 +183,196 @@ form {
                 margin-right: 10px;
             }
         }
+        .routing-container {
+            .heading {
+                margin-bottom: 0;
+            }
+            h6 {
+                display: inline-block;
+                margin-bottom: 0;
+            }
+            button.btn-sm {
+                font-size: 0.75rem;
+                position: absolute;
+                right: 20px;
+            }
+            hr {
+                margin-top: 0.5rem;
+                margin-bottom: 0.5rem;
+            }
+            small {
+                font-style: italic;
+            }
+            .directions {
+                font-size: small;
+                padding-left: 1rem;
+                margin-bottom: 1.5rem;
+                li span.arrow {
+                    position: relative;
+                    top: 8px;
+                    display: inline-block;
+                    min-width: 28px;
+                    min-height: 28px;
+                    background-position: 0px;
+                    background-image: url('https://heremaps.github.io/maps-api-for-javascript-examples/map-with-pedestrian-route-from-a-to-b/img/arrows.png');
+                }
+                li span.depart {
+                    background-position: -28px;
+                }
+                li span.rightUTurn {
+                    background-position: -56px;
+                }
+                li span.leftUTurn {
+                    background-position: -84px;
+                }
+                li span.rightFork {
+                    background-position: -112px;
+                }
+                li span.leftFork {
+                    background-position: -140px;
+                }
+                li span.rightMerge {
+                    background-position: -112px;
+                }
+                li span.leftMerge {
+                    background-position: -140px;
+                }
+                li span.slightRightTurn {
+                    background-position: -168px;
+                }
+                li span.slightLeftTurn {
+                    background-position: -198px;
+                }
+                li span.rightTurn {
+                    background-position: -224px;
+                }
+                li span.leftTurn {
+                    background-position: -252px;
+                }
+                li span.sharpRightTurn {
+                    background-position: -280px;
+                }
+                li span.sharpLeftTurn {
+                    background-position: -308px;
+                }
+                li span.rightRoundaboutExit1 {
+                    background-position: -616px;
+                }
+                li span.rightRoundaboutExit2 {
+                    background-position: -644px;
+                }
+                li span.rightRoundaboutExit3 {
+                    background-position: -672px;
+                }
+                li span.rightRoundaboutExit4 {
+                    background-position: -700px;
+                }
+                li span.rightRoundaboutPass {
+                    background-position: -700px;
+                }
+                li span.rightRoundaboutExit5 {
+                    background-position: -728px;
+                }
+                li span.rightRoundaboutExit6 {
+                    background-position: -756px;
+                }
+                li span.rightRoundaboutExit7 {
+                    background-position: -784px;
+                }
+                li span.rightRoundaboutExit8 {
+                    background-position: -812px;
+                }
+                li span.rightRoundaboutExit9 {
+                    background-position: -840px;
+                }
+                li span.rightRoundaboutExit10 {
+                    background-position: -868px;
+                }
+                li span.rightRoundaboutExit11 {
+                    background-position: 896px;
+                }
+                li span.rightRoundaboutExit12 {
+                    background-position: 924px;
+                }
+                li span.leftRoundaboutExit1 {
+                    background-position: -952px;
+                }
+                li span.leftRoundaboutExit2 {
+                    background-position: -980px;
+                }
+                li span.leftRoundaboutExit3 {
+                    background-position: -1008px;
+                }
+                li span.leftRoundaboutExit4 {
+                    background-position: -1036px;
+                }
+                li span.leftRoundaboutPass {
+                    background-position: 1036px;
+                }
+                li span.leftRoundaboutExit5 {
+                    background-position: -1064px;
+                }
+                li span.leftRoundaboutExit6 {
+                    background-position: -1092px;
+                }
+                li span.leftRoundaboutExit7 {
+                    background-position: -1120px;
+                }
+                li span.leftRoundaboutExit8 {
+                    background-position: -1148px;
+                }
+                li span.leftRoundaboutExit9 {
+                    background-position: -1176px;
+                }
+                li span.leftRoundaboutExit10 {
+                    background-position: -1204px;
+                }
+                li span.leftRoundaboutExit11 {
+                    background-position: -1232px;
+                }
+                li span.leftRoundaboutExit12 {
+                    background-position: -1260px;
+                }
+                li span.arrive {
+                    background-position: -1288px;
+                }
+                li span.leftRamp {
+                    background-position: -396px;
+                }
+                li span.rightRamp {
+                    background-position: -420px;
+                }
+                li span.leftExit {
+                    background-position: -452px;
+                }
+                li span.rightExit {
+                    background-position: -473px;
+                }
+                li span.ferry {
+                    background-position: -1316px;
+                }
+            }
+        }
     }
+}
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+::-webkit-scrollbar-thumb:active {
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
 .view-container {
@@ -253,6 +446,12 @@ form {
     }
     #subtitle {
         font-size: 1rem;
+    }
+    .info-container {
+        max-height: 40vh;
+    }
+    .close-view-btn {
+        right: 20px;
     }
 }
 
