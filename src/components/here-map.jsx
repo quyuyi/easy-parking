@@ -155,8 +155,8 @@ class HereMap extends Component {
             bounds: polyLine.getBoundingBox().mergeRect(H.geo.Rect.coverPoints([
                 { lat: route.waypoint[0].originalPosition.latitude - 0.001, lng: route.waypoint[0].originalPosition.longitude - 0.001 },
                 { lat: route.waypoint[1].originalPosition.latitude - 0.001, lng: route.waypoint[1].originalPosition.longitude - 0.001 },
-                { lat: route.waypoint[0].originalPosition.latitude + 0.001, lng: route.waypoint[0].originalPosition.longitude - 0.001 },
-                { lat: route.waypoint[1].originalPosition.latitude + 0.001, lng: route.waypoint[1].originalPosition.longitude - 0.001 }
+                { lat: route.waypoint[0].originalPosition.latitude + 0.001, lng: route.waypoint[0].originalPosition.longitude + 0.001 },
+                { lat: route.waypoint[1].originalPosition.latitude + 0.001, lng: route.waypoint[1].originalPosition.longitude + 0.001 }
             ]))
         });
         this.redrawBubbles();
