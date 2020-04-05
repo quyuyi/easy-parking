@@ -39,6 +39,7 @@ class SearchForm extends Component {
                             <Form.Text> {
                                 this.state.autoComplete.slice(0, 5).map((e, i) => (
                                     <Alert key={i} variant='info'
+                                        pid={ this.formatPlaceID(e) }
                                         onClick={ e => this.autoFill(e) }
                                     >
                                         {e.title}
@@ -66,6 +67,7 @@ class SearchForm extends Component {
                             Search
                         </Button>
                     </div>
+                    <input type='hidden' name='placeID' id='place-id' />
                 </Form>
             </Container>
         );
@@ -73,7 +75,19 @@ class SearchForm extends Component {
 
     autoFill = e => {
         document.getElementById('input-destination').value = e.currentTarget.innerText;
+        document.getElementById('place-id').value = e.currentTarget.getAttribute('pid');
         this.setState({ autoComplete: [] });
+    }
+
+    formatPlaceID(e) {
+        const mapping = {
+            'way': 'W',
+            'node': 'N',
+            'relation': 'R'
+        };
+        if (e.hasOwnProperty('osm_type') && e.hasOwnProperty('osm_id'))
+            return mapping[e.osm_type] + e.osm_id;
+        return '';
     }
 
     handleSearchRequest = e => {

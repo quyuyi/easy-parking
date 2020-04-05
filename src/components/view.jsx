@@ -152,7 +152,7 @@ class View extends Component {
                     break;
 
                 case 'accessible':
-                    property.text = 'This slot is reserved for accessibility only. Do you still want to book this slot?';
+                    property.text = 'This slot is reserved for people with disabilities only. Do you still want to book this slot?';
                     property.buttons.push('Yes');
                     property.buttons.push('Cancel');
                     break;

@@ -64,7 +64,7 @@ class Main extends Component {
 
     submitSearchRequest = async btn => {
         btn.disabled = true;
-        const data = await this.fetchResponse();
+        const data = await this.searchPlaceByID();
         btn.disabled = false;
         if (data.length === 0) {
             alert('Failed to locate your destination!');
@@ -93,13 +93,13 @@ class Main extends Component {
         ]);
         if (res1.ok) {
             const data = await res1.json();
-            return new Promise.resolve(data.items);
+            return Promise.resolve(data.items);
         }
         console.warn(res1.statusText);
         // here api expired, use openstreetmap instead
         if (!res2.ok) {
             console.warn(res2.statusText);
-            return new Promise.resolve([]);
+            return Promise.resolve([]);
         }
         let data = await res2.json();
         return new Promise(resolve => {
@@ -113,11 +113,31 @@ class Main extends Component {
                         lat: item.lat,
                         lng: item.lon
                     },
-                    title: item['display_name']
+                    title: item.display_name,
+                    osm_id: item.osm_id,
+                    osm_type: item.osm_type
                 });
             });
             resolve(rst);
         });
+    };
+
+    searchPlaceByID = async () => {
+        const pid = $('#place-id').val();
+        if (pid.length > 0) {
+            const res = await fetch(`https://nominatim.openstreetmap.org/lookup?osm_ids=${pid}&format=json`);
+            if (res.ok) {
+                const data = await res.json();
+                return Promise.resolve([{
+                    position: {
+                        lat: data[0].lat,
+                        lng: data[0].lon
+                    },
+                    title: data[0].display_name
+                }]);
+            }
+        }
+        return this.fetchResponse();
     };
 }
 
