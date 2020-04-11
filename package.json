@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "webpack --config webpack.config.js -p",
+    "build": "webpack --config webpack.config.js",
     "migration": "rm database.db booking.db; node ./migration.js",
     "start": "node ./bin/www"
   },
