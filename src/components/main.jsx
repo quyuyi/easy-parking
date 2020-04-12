@@ -28,6 +28,7 @@ class Main extends Component {
             easing: 'easeOutQuad',
             duration: 3000
         });
+        document.querySelector('.easy-parking').removeChild(document.getElementById('☸'));
     }
 
     render() {
