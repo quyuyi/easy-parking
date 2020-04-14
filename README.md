@@ -13,5 +13,5 @@ A tool to help you find your parking slot.
 2. Run `npm install .` to install all the necessary packages.
 3. Populate the database: Run `npm run migration`. If you see any errors, just ignore them.
 4. Run `npm run start` to start the application.
-5. Go to `localhost:3000` to access the application. If your browser blocks you from obtaining your geographical location due to security issues, which prevents our application from running properly, go to `https://localhost:8443` for the https version.
+5. Go to `localhost:3000` to access the application. If your browser blocks you from obtaining your geographical location due to security issues, which prevents our application from running properly, go to `https://localhost:8443` for the https version. You need to choose "proceed" anyway though your browser may warn you that it is not secure.
 6. Enjoy.
