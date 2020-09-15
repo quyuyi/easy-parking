@@ -1,7 +1,8 @@
 # Easy Parking
-A tool to help you find your parking slot.
+An app to help you find your parking slot.
 
 ### Overview
+A video walk through of the app can be found [here](https://drive.google.com/file/d/1dc3pxrnnzPf_Gp0ll_3rljgBS621e5Sd/view?usp=sharing). The following screen shots show some basic functionality of the app.
 ![Homepage](./description/homepage.png)
 
 *The home page of our app.*

@@ -5,3 +5,4 @@ env/
 *.bundle.js
 *.bundle.js.*
 *.mov
+.DS_Store
