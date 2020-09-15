@@ -4,3 +4,4 @@ credentials.properties
 env/
 *.bundle.js
 *.bundle.js.*
+*.mov

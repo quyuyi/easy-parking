@@ -1,6 +1,19 @@
 # Easy Parking
 A tool to help you find your parking slot.
 
+### Overview
+![Homepage](./description/homepage.png)
+
+*The home page of our app.*
+
+![parks](./description/parks.png)
+
+*A screen shot of the parks relevant to the search.*
+
+![slots](./description/parking_slots.png)
+
+*A screen shot of the layout of a certain park.*
+
 ### Frameworks Used
 - React
 - Bootstrap
